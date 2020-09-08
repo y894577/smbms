@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="localhost" uuid="e8c67063-569c-44f7-9f10-8f71c0ccf5b2">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306?serverTimezone=Asia/Shanghai</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="javastudy" uuid="569be0f8-0e8b-4426-a3aa-dab6575043fd">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306?serverTimezone=Asia/Shanghai</jdbc-url>
+    </data-source>
+  </component>
+</project>
