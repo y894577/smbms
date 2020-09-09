@@ -17,10 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class UserServlet extends HttpServlet {
     @Override
@@ -40,6 +40,10 @@ public class UserServlet extends HttpServlet {
                 this.updatePwd(req, resp);
             } else if (method.equals("query")) {
                 this.query(req, resp);
+            } else if (method.equals("view")) {
+                this.view(req, resp);
+            } else if (method.equals("modify")) {
+                
             }
         }
     }
@@ -129,18 +133,34 @@ public class UserServlet extends HttpServlet {
 
         req.setAttribute("userList", userList);
         req.setAttribute("roleList", roleList);
-        req.setAttribute("totalCount",totalCount);
-        req.setAttribute("currentPageNo",currentPageNo);
-        req.setAttribute("totalPageCount",totalPageCount);
-        req.setAttribute("queryUserName",queryUserName);
-        req.setAttribute("queryUserRole",queryUserRole);
+        req.setAttribute("totalCount", totalCount);
+        req.setAttribute("currentPageNo", currentPageNo);
+        req.setAttribute("totalPageCount", totalPageCount);
+        req.setAttribute("queryUserName", queryUserName);
+        req.setAttribute("queryUserRole", queryUserRole);
 
         try {
-            req.getRequestDispatcher("userlist.jsp").forward(req,resp);
+            req.getRequestDispatcher("userlist.jsp").forward(req, resp);
         } catch (ServletException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void view(HttpServletRequest req, HttpServletResponse resp) {
+        String id = req.getParameter("uid");
+        UserService userService = new UserServiceImpl();
+        if(!StringUtils.isNullOrEmpty(id)){
+            User user = userService.getUserView(Integer.parseInt(id));
+            try {
+                req.setAttribute("user",user);
+                req.getRequestDispatcher("userview.jsp").forward(req, resp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ServletException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import com.mysql.jdbc.StringUtils;
 import com.test.dao.BaseDao;
 import com.test.pojo.Role;
 import com.test.pojo.User;
+import org.junit.jupiter.api.Test;
 
 import javax.sound.midi.Soundbank;
 import java.sql.Connection;
@@ -143,6 +144,54 @@ public class UserDaoImpl implements UserDao {
             }
         }
         return userList;
+    }
+
+    public User getUserView(Connection connection, int id) {
+        User user = null;
+
+        PreparedStatement preparedStatement = null;
+
+        ResultSet resultSet = null;
+
+        if (connection != null) {
+            String sql = "select u.*,r.roleName as userRoleName from smbms_user u,smbms_role r where u.id=? and u.userRole = r.id";
+            Object[] params = {id};
+            try {
+                resultSet = BaseDao.execute(connection, sql, params);
+
+                if (resultSet.next()) {
+                    user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setUserCode(resultSet.getString("userCode"));
+                    user.setUserName(resultSet.getString("userName"));
+                    user.setUserPassword(resultSet.getString("userPassword"));
+                    user.setGender(resultSet.getInt("gender"));
+                    user.setBirthday(resultSet.getDate("birthday"));
+                    user.setPhone(resultSet.getString("phone"));
+                    user.setAddress(resultSet.getString("address"));
+                    user.setUserRole(resultSet.getInt("userRole"));
+                    user.setCreatedBy(resultSet.getInt("createdBy"));
+                    user.setCreationDate(resultSet.getTimestamp("creationDate"));
+                    user.setModifyBy(resultSet.getInt("modifyBy"));
+                    user.setModifyDate(resultSet.getTimestamp("modifyDate"));
+                }
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }finally {
+                BaseDao.close(connection, preparedStatement, resultSet);
+            }
+        }
+        return user;
+    }
+
+    @Test
+    public void test() throws SQLException, ClassNotFoundException {
+        Connection connection = BaseDao.getConnection();
+        UserDao userDao = new UserDaoImpl();
+        User userView = userDao.getUserView(connection, 11);
+        System.out.println(userView.getUserName());
+
     }
 
 }

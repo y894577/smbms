@@ -18,4 +18,6 @@ public interface UserDao {
 
     //获取用户列表
     public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize);
+
+    public User getUserView(Connection connection, int id);
 }

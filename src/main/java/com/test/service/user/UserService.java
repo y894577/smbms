@@ -14,4 +14,6 @@ public interface UserService {
     public int getUserCount(String userName, int userRole);
 
     public List<User> getUserList(String userName,int userRole,int currentPageNo,int pageSize);
+
+    public User getUserView(int id);
 }

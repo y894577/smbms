@@ -7,6 +7,7 @@ import com.test.pojo.User;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
@@ -72,9 +73,25 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    public User getUserView(int id) {
+        Connection connection = null;
+        User user = null;
+        try {
+            connection = BaseDao.getConnection();
+            user = userDao.getUserView(connection, id);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            BaseDao.close(connection, null, null);
+        }
+        return user;
+    }
+
     @Test
     public void test() {
         UserServiceImpl userService = new UserServiceImpl();
-        System.out.println(userService.getUserCount(null, 2));
+        System.out.println(userService.getUserView(11).getModifyBy());
     }
 }
