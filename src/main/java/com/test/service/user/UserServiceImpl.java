@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             userList = userDao.getUserList(connection, userName, userRole, currentPageNo, pageSize);
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             BaseDao.close(connection, null, null);
         }
         return userList;
@@ -83,15 +83,34 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             BaseDao.close(connection, null, null);
         }
         return user;
     }
 
+    public boolean updateUser(User user) {
+        boolean isUpdate = false;
+
+        try {
+            Connection connection = BaseDao.getConnection();
+            if (connection != null) {
+                int update = userDao.updateUser(connection, user);
+                if (update > 0) {
+                    isUpdate = true;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return isUpdate;
+    }
+
     @Test
     public void test() {
         UserServiceImpl userService = new UserServiceImpl();
-        System.out.println(userService.getUserView(11).getModifyBy());
+        System.out.println(userService.getUserView(11).getUserRole());
     }
 }

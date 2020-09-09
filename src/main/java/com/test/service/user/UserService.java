@@ -16,4 +16,6 @@ public interface UserService {
     public List<User> getUserList(String userName,int userRole,int currentPageNo,int pageSize);
 
     public User getUserView(int id);
+
+    public boolean updateUser(User user);
 }

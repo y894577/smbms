@@ -20,4 +20,6 @@ public interface UserDao {
     public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize);
 
     public User getUserView(Connection connection, int id);
+
+    public int updateUser(Connection connection, User user);
 }

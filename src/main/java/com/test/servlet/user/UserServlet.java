@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +27,15 @@ import java.util.logging.Logger;
 
 public class UserServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String method = req.getParameter("method");
+        if (method.equals("modifyexe")) {
+            this.userModify(req,resp);
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
         if (method != null) {
             if (method.equals("pwdmodify")) {
@@ -41,10 +47,49 @@ public class UserServlet extends HttpServlet {
             } else if (method.equals("query")) {
                 this.query(req, resp);
             } else if (method.equals("view")) {
-                this.view(req, resp);
+                this.view(req, resp, "userview.jsp");
             } else if (method.equals("modify")) {
-                
+                this.view(req, resp, "usermodify.jsp");
             }
+        }
+    }
+
+    private void userModify(HttpServletRequest req, HttpServletResponse resp) {
+        String id = req.getParameter("uid");
+        String userName = req.getParameter("userName");
+        String gender = req.getParameter("gender");
+        String birthday = req.getParameter("birthday");
+        String phone = req.getParameter("phone");
+        String address = req.getParameter("address");
+        String userRole = req.getParameter("userRole");
+
+        User user = new User();
+        user.setId(Integer.parseInt(id));
+        user.setUserName(userName);
+        user.setGender(Integer.parseInt(gender));
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setModifyBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
+        user.setModifyDate(new Date());
+
+        UserService userService = new UserServiceImpl();
+        boolean isUpdate = userService.updateUser(user);
+        try {
+            if (isUpdate) {
+                System.out.println("success");
+                resp.sendRedirect(req.getContextPath() + "/jsp/user.do?method=query");
+            } else {
+                System.out.println("fail");
+                req.getRequestDispatcher("usermodify.jsp").forward(req, resp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,14 +193,30 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public void view(HttpServletRequest req, HttpServletResponse resp) {
+    public void view(HttpServletRequest req, HttpServletResponse resp, String url) {
         String id = req.getParameter("uid");
         UserService userService = new UserServiceImpl();
-        if(!StringUtils.isNullOrEmpty(id)){
+        if (!StringUtils.isNullOrEmpty(id)) {
             User user = userService.getUserView(Integer.parseInt(id));
             try {
-                req.setAttribute("user",user);
-                req.getRequestDispatcher("userview.jsp").forward(req, resp);
+                req.setAttribute("user", user);
+                req.getRequestDispatcher(url).forward(req, resp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ServletException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void userModify(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
+        String id = req.getParameter("uid");
+        UserService userService = new UserServiceImpl();
+        if (!StringUtils.isNullOrEmpty(id)) {
+            User user = userService.getUserView(Integer.parseInt(id));
+            try {
+                req.setAttribute("user", user);
+                req.getRequestDispatcher(url).forward(req, resp);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ServletException e) {

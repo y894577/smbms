@@ -1,4 +1,4 @@
-var userName = null;
+﻿var userName = null;
 var birthday = null;
 var phone = null;
 var userRole = null;
@@ -100,7 +100,7 @@ $(function(){
 		if(userName.attr("validateStatus") == "true" 
 			&& phone.attr("validateStatus") == "true"
 			&& birthday.attr("validateStatus") == "true"
-			&& userRole.attr("validateStatus") == "true"){
+			){
 			if(confirm("是否确认要提交数据？")){
 				$("#userForm").submit();
 			}

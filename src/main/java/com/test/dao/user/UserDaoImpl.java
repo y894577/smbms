@@ -174,15 +174,34 @@ public class UserDaoImpl implements UserDao {
                     user.setCreationDate(resultSet.getTimestamp("creationDate"));
                     user.setModifyBy(resultSet.getInt("modifyBy"));
                     user.setModifyDate(resultSet.getTimestamp("modifyDate"));
+                    user.setUserRoleName(resultSet.getString("userRoleName"));
+                    user.setUserRole(resultSet.getInt("userRole"));
                 }
 
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
-            }finally {
+            } finally {
                 BaseDao.close(connection, preparedStatement, resultSet);
             }
         }
         return user;
+    }
+
+    public int updateUser(Connection connection, User user) {
+        int update = 0;
+
+        if (connection != null) {
+            Object[] params = {user.getUserName(), user.getGender(), user.getBirthday(), user.getPhone(), user.getAddress(), user.getModifyBy(), user.getModifyDate(), user.getId()};
+            String sql = "update smbms_user set userName=?, gender=?, birthday=?, phone=?, address=?, modifyBy=?, modifyDate=? where id=? ";
+            try {
+                update = BaseDao.update(connection, sql, params);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }finally {
+                BaseDao.close(connection, null, null);
+            }
+        }
+        return update;
     }
 
     @Test
@@ -190,7 +209,7 @@ public class UserDaoImpl implements UserDao {
         Connection connection = BaseDao.getConnection();
         UserDao userDao = new UserDaoImpl();
         User userView = userDao.getUserView(connection, 11);
-        System.out.println(userView.getUserName());
+        System.out.println(userView.getUserRoleName());
 
     }
 
