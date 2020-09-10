@@ -108,9 +108,45 @@ public class UserServiceImpl implements UserService {
         return isUpdate;
     }
 
+    public int addUser(User user) {
+        int update = 0;
+        Connection connection = null;
+        try {
+            connection = BaseDao.getConnection();
+            if (connection != null) {
+                update = userDao.addUser(connection, user);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            BaseDao.close(connection, null, null);
+        }
+        return update;
+    }
+
+    public int getUserCountByUserCode(String userCode) {
+        Connection connection = null;
+        int count = 0;
+        try {
+            connection = BaseDao.getConnection();
+            if (connection != null) {
+                count = userDao.getUserCountByUserCode(connection, userCode);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            BaseDao.close(connection, null, null);
+        }
+        return count;
+    }
+
     @Test
     public void test() {
         UserServiceImpl userService = new UserServiceImpl();
-        System.out.println(userService.getUserView(11).getUserRole());
+        System.out.println(userService.getUserCountByUserCode("aaa"));
     }
 }

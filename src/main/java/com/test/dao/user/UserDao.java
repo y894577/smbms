@@ -22,4 +22,8 @@ public interface UserDao {
     public User getUserView(Connection connection, int id);
 
     public int updateUser(Connection connection, User user);
+
+    public int addUser(Connection connection,User user);
+
+    public int getUserCountByUserCode(Connection connection, String userCode);
 }

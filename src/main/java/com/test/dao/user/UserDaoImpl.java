@@ -1,5 +1,6 @@
 package com.test.dao.user;
 
+import com.mysql.fabric.xmlrpc.base.Params;
 import com.mysql.jdbc.StringUtils;
 import com.test.dao.BaseDao;
 import com.test.pojo.Role;
@@ -197,6 +198,22 @@ public class UserDaoImpl implements UserDao {
                 update = BaseDao.update(connection, sql, params);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+            } finally {
+                BaseDao.close(connection, null, null);
+            }
+        }
+        return update;
+    }
+
+    public int addUser(Connection connection, User user) {
+        int update = 0;
+        if (connection != null) {
+            String sql = "insert into smbms_user (userCode,userName,userPassword,gender,birthday,phone,address,userRole,createBy,creationDate) values (?,?,?,?,?,?,?,?,?,?,)";
+            Object[] params = {user.getUserCode(), user.getUserName(), user.getUserPassword(), user.getGender(), user.getBirthday(), user.getPhone(), user.getAddress(), user.getUserRole(), user.getCreatedBy(), user.getCreationDate()};
+            try {
+                update = BaseDao.update(connection, sql, params);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }finally {
                 BaseDao.close(connection, null, null);
             }
@@ -204,12 +221,33 @@ public class UserDaoImpl implements UserDao {
         return update;
     }
 
+    public int getUserCountByUserCode(Connection connection, String userCode) {
+        User user = null;
+        int count = 0;
+        ResultSet resultSet = null;
+        if (connection != null) {
+            String sql = "select count(1) as count from smbms_user where userCode = ?";
+            Object[] params = {userCode};
+            try {
+                resultSet = BaseDao.execute(connection, sql, params);
+                if (resultSet.next()) {
+                    count = resultSet.getInt("count");
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }finally {
+                BaseDao.close(connection, null,resultSet);
+            }
+        }
+        return count;
+    }
+
     @Test
     public void test() throws SQLException, ClassNotFoundException {
         Connection connection = BaseDao.getConnection();
         UserDao userDao = new UserDaoImpl();
-        User userView = userDao.getUserView(connection, 11);
-        System.out.println(userView.getUserRoleName());
+
+        System.out.println(userDao.getUserCountByUserCode(connection,"admin"));
 
     }
 

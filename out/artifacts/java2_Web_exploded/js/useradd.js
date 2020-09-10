@@ -1,4 +1,4 @@
-var userCode = null;
+﻿var userCode = null;
 var userName = null;
 var userPassword = null;
 var ruserPassword = null;
@@ -38,8 +38,8 @@ $(function(){
 				userRole.html("");
 				var options = "<option value=\"0\">请选择</option>";
 				for(var i = 0; i < data.length; i++){
-					//alert(data[i].id);
-					//alert(data[i].roleName);
+					// alert(data[i].id);
+					// alert(data[i].roleName);
 					options += "<option value=\""+data[i].id+"\">"+data[i].roleName+"</option>";
 				}
 				userRole.html(options);

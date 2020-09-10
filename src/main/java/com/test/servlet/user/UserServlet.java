@@ -1,7 +1,9 @@
 package com.test.servlet.user;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.mysql.jdbc.StringUtils;
+import com.test.dao.BaseDao;
 import com.test.pojo.Role;
 import com.test.pojo.User;
 import com.test.service.role.RoleService;
@@ -17,20 +19,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
         if (method.equals("modifyexe")) {
-            this.userModify(req,resp);
+            this.userModify(req, resp);
+        } else if (method.equals("add")) {
+            this.addUser(req, resp);
         }
     }
 
@@ -50,6 +56,10 @@ public class UserServlet extends HttpServlet {
                 this.view(req, resp, "userview.jsp");
             } else if (method.equals("modify")) {
                 this.view(req, resp, "usermodify.jsp");
+            } else if (method.equals("getrolelist")) {
+                this.getRoleList(req, resp);
+            } else if (method.equals("ucexist")) {
+                this.userExist(req,resp);
             }
         }
     }
@@ -222,6 +232,73 @@ public class UserServlet extends HttpServlet {
             } catch (ServletException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void getRoleList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        List<Role> roleList = null;
+        RoleService roleService = new RoleServiceImpl();
+        roleList = roleService.getRoleList();
+        resp.setContentType("application/json;charset=utf-8");
+        PrintWriter writer = resp.getWriter();
+        writer.write(JSONArray.toJSONString(roleList));
+        writer.flush();
+        writer.close();
+    }
+
+
+    private void addUser(HttpServletRequest req, HttpServletResponse resp) {
+        User user = null;
+        String userCode = req.getParameter("userCode");
+        String userName = req.getParameter("userName");
+        String userPassword = req.getParameter("userPassword");
+        String gender = req.getParameter("gender");
+        String birthday = req.getParameter("birthday");
+        String phone = req.getParameter("phone");
+        String address = req.getParameter("address");
+        String userRole = req.getParameter("userRole");
+
+        user = new User();
+        user.setUserCode(userCode);
+        user.setUserName(userName);
+        user.setUserPassword(userPassword);
+        user.setGender(Integer.parseInt(gender));
+        try {
+            user.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse(birthday));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        user.setPhone(phone);
+        user.setAddress(address);
+        user.setUserRole(Integer.valueOf(userRole));
+        user.setCreatedBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
+        user.setCreationDate(new Date());
+
+        UserService userService = new UserServiceImpl();
+        int update = userService.addUser(user);
+        if (update > 0) {
+            //跳转
+        }
+    }
+
+    public void userExist(HttpServletRequest req, HttpServletResponse resp) {
+        String userCode = req.getParameter("userCode");
+        UserService userService = new UserServiceImpl();
+        int count = userService.getUserCountByUserCode(userCode);
+        Map<String, String> resultMap = new HashMap<String, String>();
+        if (count > 0) {
+            resultMap.put("userCode", "exist");
+        }else {
+            resultMap.put("userCode","canbeused");
+        }
+        resp.setContentType("application/json;charset=utf-8");
+        try {
+            PrintWriter writer = resp.getWriter();
+            writer.write(JSONArray.toJSONString(resultMap));
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

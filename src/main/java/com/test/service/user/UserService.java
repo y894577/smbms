@@ -18,4 +18,8 @@ public interface UserService {
     public User getUserView(int id);
 
     public boolean updateUser(User user);
+
+    public int addUser(User user);
+
+    public int getUserCountByUserCode(String userCode);
 }
