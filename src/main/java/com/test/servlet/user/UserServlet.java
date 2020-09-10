@@ -92,10 +92,8 @@ public class UserServlet extends HttpServlet {
         boolean isUpdate = userService.updateUser(user);
         try {
             if (isUpdate) {
-                System.out.println("success");
                 resp.sendRedirect(req.getContextPath() + "/jsp/user.do?method=query");
             } else {
-                System.out.println("fail");
                 req.getRequestDispatcher("usermodify.jsp").forward(req, resp);
             }
         } catch (Exception e) {
@@ -277,7 +275,11 @@ public class UserServlet extends HttpServlet {
         UserService userService = new UserServiceImpl();
         int update = userService.addUser(user);
         if (update > 0) {
-            //跳转
+            try {
+                resp.sendRedirect(req.getContextPath() + "/jsp/user.do?method=query");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

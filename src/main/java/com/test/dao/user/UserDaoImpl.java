@@ -208,7 +208,7 @@ public class UserDaoImpl implements UserDao {
     public int addUser(Connection connection, User user) {
         int update = 0;
         if (connection != null) {
-            String sql = "insert into smbms_user (userCode,userName,userPassword,gender,birthday,phone,address,userRole,createBy,creationDate) values (?,?,?,?,?,?,?,?,?,?,)";
+            String sql = "insert into smbms_user (userCode,userName,userPassword,gender,birthday,phone,address,userRole,createdBy,creationDate) values (?,?,?,?,?,?,?,?,?,?);";
             Object[] params = {user.getUserCode(), user.getUserName(), user.getUserPassword(), user.getGender(), user.getBirthday(), user.getPhone(), user.getAddress(), user.getUserRole(), user.getCreatedBy(), user.getCreationDate()};
             try {
                 update = BaseDao.update(connection, sql, params);
