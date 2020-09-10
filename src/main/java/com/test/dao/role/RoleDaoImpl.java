@@ -29,8 +29,6 @@ public class RoleDaoImpl implements RoleDao {
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
-            } finally {
-                BaseDao.close(connection, null, resultSet);
             }
         }
         return roleList;

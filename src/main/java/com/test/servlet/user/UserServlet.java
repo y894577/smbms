@@ -101,7 +101,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public void updatePwd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void updatePwd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Object user = req.getSession().getAttribute(Constant.USER_SESSION);
 
         String newpassword = req.getParameter("newpassword");
@@ -122,7 +122,7 @@ public class UserServlet extends HttpServlet {
         req.getRequestDispatcher("pwdmodify.jsp").forward(req, resp);
     }
 
-    public void modifyPwd(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void modifyPwd(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Object user = req.getSession().getAttribute(Constant.USER_SESSION);
         String oldpassword = req.getParameter("oldpassword");
         Map<String, String> resultMap = new HashMap<String, String>();
@@ -146,7 +146,7 @@ public class UserServlet extends HttpServlet {
         writer.close();
     }
 
-    public void query(HttpServletRequest req, HttpServletResponse resp) {
+    private void query(HttpServletRequest req, HttpServletResponse resp) {
         String queryUserName = req.getParameter("queryname");
         String tempQueryUserRole = req.getParameter("queryUserRole");
         String tempCurrentPageNo = req.getParameter("pageIndex");
@@ -201,7 +201,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public void view(HttpServletRequest req, HttpServletResponse resp, String url) {
+    private void view(HttpServletRequest req, HttpServletResponse resp, String url) {
         String id = req.getParameter("uid");
         UserService userService = new UserServiceImpl();
         if (!StringUtils.isNullOrEmpty(id)) {
@@ -283,7 +283,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public void userExist(HttpServletRequest req, HttpServletResponse resp) {
+    private void userExist(HttpServletRequest req, HttpServletResponse resp) {
         String userCode = req.getParameter("userCode");
         UserService userService = new UserServiceImpl();
         int count = userService.getUserCountByUserCode(userCode);

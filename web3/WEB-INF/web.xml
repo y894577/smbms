@@ -40,6 +40,15 @@
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/jsp/user.do</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ProviderServlet</servlet-name>
+        <servlet-class>com.test.servlet.provider.ProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProviderServlet</servlet-name>
+        <url-pattern>/jsp/provider.do</url-pattern>
+    </servlet-mapping>
 
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
