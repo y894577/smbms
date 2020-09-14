@@ -4,6 +4,7 @@ import com.test.dao.BaseDao;
 import com.test.dao.user.UserDao;
 import com.test.dao.user.UserDaoImpl;
 import com.test.pojo.User;
+import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -13,21 +14,28 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
+    private SqlSession sqlSession = null;
+    private UserDao mapper = null;
+
     public UserServiceImpl() {
-        userDao = new UserDaoImpl();
+//        userDao = new UserDaoImpl();
+        sqlSession = BaseDao.getSqlSession();
+        mapper = sqlSession.getMapper(UserDao.class);
     }
 
     public User login(String userCode, String userPassword) {
-        Connection connection = null;
         User user = null;
 
         try {
-            connection = BaseDao.getConnection();
-            user = userDao.getLoginUser(connection, userCode, userPassword);
+//            connection = BaseDao.getConnection();
+//            user = userDao.getLoginUser(connection, userCode, userPassword);
+            mapper = sqlSession.getMapper(UserDao.class);
+            user = mapper.getLoginUser(userCode, userPassword);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            BaseDao.close(connection, null, null);
+            sqlSession.close();
         }
         return user;
     }
@@ -120,7 +128,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             BaseDao.close(connection, null, null);
         }
         return update;
@@ -138,7 +146,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             BaseDao.close(connection, null, null);
         }
         return count;
@@ -146,7 +154,7 @@ public class UserServiceImpl implements UserService {
 
     @Test
     public void test() {
-        UserServiceImpl userService = new UserServiceImpl();
-        System.out.println(userService.getUserCountByUserCode("aaa"));
+//        UserServiceImpl userService = new UserServiceImpl();
+//        System.out.println(userService.getUserCountByUserCode("aaa"));
     }
 }

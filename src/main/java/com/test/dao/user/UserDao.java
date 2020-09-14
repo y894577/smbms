@@ -2,13 +2,14 @@ package com.test.dao.user;
 
 import com.test.pojo.Role;
 import com.test.pojo.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Connection;
 import java.util.List;
 
 public interface UserDao {
     //获取登录的用户
-    public User getLoginUser(Connection connection, String userCode, String userPassword);
+    public User getLoginUser(@Param("userCode")String userCode, @Param("userPassword")String userPassword);
 
     //修改用户密码
     public int updatePwd(Connection connection, int id, String updatePassword);
