@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private UserDao userDao;
-
     private SqlSession sqlSession = null;
     private UserDao mapper = null;
 

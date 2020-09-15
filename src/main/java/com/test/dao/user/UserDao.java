@@ -8,28 +8,28 @@ import java.util.List;
 
 public interface UserDao {
     //获取登录的用户
-    public User getLoginUser(@Param("userCode") String userCode,
-                             @Param("userPassword") String userPassword);
+    User getLoginUser(@Param("userCode") String userCode,
+                      @Param("userPassword") String userPassword);
 
     //修改用户密码
-    public int updatePwd(@Param("id") int id,
-                         @Param("userPassword") String updatePassword);
+    int updatePwd(@Param("id") int id,
+                  @Param("userPassword") String updatePassword);
 
     //查询用户总数
-    public int getUserCount(@Param("userName") String userName,
-                            @Param("userRole") int userRole);
+    int getUserCount(@Param("userName") String userName,
+                     @Param("userRole") int userRole);
 
     //获取用户列表
-    public List<User> getUserList(@Param("userName") String userName,
-                                  @Param("userRole") Integer userRole,
-                                  @Param("currentPageNo") int currentPageNo,
-                                  @Param("pageSize") int pageSize);
+    List<User> getUserList(@Param("userName") String userName,
+                           @Param("userRole") Integer userRole,
+                           @Param("currentPageNo") int currentPageNo,
+                           @Param("pageSize") int pageSize);
 
-    public User getUserView(@Param("id") int id);
+    User getUserView(@Param("id") int id);
 
-    public int updateUser(User user);
+    int updateUser(User user);
 
-    public int addUser(User user);
+    int addUser(User user);
 
-    public int getUserCountByUserCode(@Param("userCode") String userCode);
+    int getUserCountByUserCode(@Param("userCode") String userCode);
 }

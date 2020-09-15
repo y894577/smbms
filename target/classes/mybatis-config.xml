@@ -12,6 +12,8 @@
 
     <typeAliases>
         <typeAlias type="com.test.pojo.User" alias="User"/>
+        <typeAlias type="com.test.pojo.Provider" alias="Provider"/>
+        <typeAlias type="com.test.pojo.Role" alias="Role"/>
     </typeAliases>
     
 
@@ -30,6 +32,8 @@
 
     <mappers>
         <mapper resource="com/test/dao/user/UserMapper.xml"/>
+        <mapper resource="com/test/dao/provider/ProviderMapper.xml"/>
+        <mapper resource="com/test/dao/role/RoleMapper.xml"/>
     </mappers>
 
 </configuration>

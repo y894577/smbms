@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoleDaoImpl implements RoleDao {
+public class RoleDaoImpl {
     public List<Role> getRoleList(Connection connection) {
         ResultSet resultSet = null;
         List<Role> roleList = new ArrayList<Role>();

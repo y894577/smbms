@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProviderDaoImpl implements ProviderDao {
+public class ProviderDaoImpl {
 
     public List<Provider> getProviderListByCodeAndName(Connection connection, String proCode, String proName) {
 //        List<Provider> providerList = new ArrayList<Provider>();

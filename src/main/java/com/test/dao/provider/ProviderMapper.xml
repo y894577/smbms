@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.dao.provider.ProviderDao">
+    <select id="getProviderListByCodeAndName" resultType="Provider">
+        select * from smbms_provider where 1=1
+        <if test="proName != null and proName != ''">
+            and proName like #{proName}
+        </if>
+        <if test="proCode != null and proCode != ''">
+            and proCode like #{proCode}
+        </if>
+    </select>
+</mapper>
