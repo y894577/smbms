@@ -18,143 +18,91 @@ public class UserServiceImpl implements UserService {
     private UserDao mapper = null;
 
     public UserServiceImpl() {
-//        userDao = new UserDaoImpl();
-        sqlSession = BaseDao.getSqlSession();
-        mapper = sqlSession.getMapper(UserDao.class);
     }
 
     public User login(String userCode, String userPassword) {
+        sqlSession = BaseDao.getSqlSession();
         User user = null;
-
-        try {
-//            connection = BaseDao.getConnection();
-//            user = userDao.getLoginUser(connection, userCode, userPassword);
-            mapper = sqlSession.getMapper(UserDao.class);
-            user = mapper.getLoginUser(userCode, userPassword);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            sqlSession.close();
-        }
+        mapper = sqlSession.getMapper(UserDao.class);
+        user = mapper.getLoginUser(userCode, userPassword);
+        sqlSession.close();
         return user;
     }
 
     public boolean updatePwd(int id, String password) {
-        Connection connection = null;
+        sqlSession = BaseDao.getSqlSession();
         boolean isUpdate = false;
-        try {
-            connection = BaseDao.getConnection();
-            if (userDao.updatePwd(connection, id, password) > 0) {
-                isUpdate = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            BaseDao.close(connection, null, null);
+        mapper = sqlSession.getMapper(UserDao.class);
+        if (mapper.updatePwd(id, password) > 0) {
+            isUpdate = true;
         }
+        sqlSession.close();
         return isUpdate;
     }
 
     public int getUserCount(String userName, int userRole) {
+        sqlSession = BaseDao.getSqlSession();
         int count = 0;
-        try {
-            Connection connection = BaseDao.getConnection();
-            count = userDao.getUserCount(connection, userName, userRole);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mapper = sqlSession.getMapper(UserDao.class);
+        count = mapper.getUserCount(userName, userRole);
+        sqlSession.close();
         return count;
     }
 
     public List<User> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
-        Connection connection = null;
+        sqlSession = BaseDao.getSqlSession();
+        mapper = sqlSession.getMapper(UserDao.class);
         List<User> userList = null;
-        try {
-            connection = BaseDao.getConnection();
-            userList = userDao.getUserList(connection, userName, userRole, currentPageNo, pageSize);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            BaseDao.close(connection, null, null);
-        }
+        currentPageNo = (currentPageNo - 1) * pageSize;
+        if (!userName.equals(""))
+            userName = "%" + userName + "%";
+        userList = mapper.getUserList(userName, userRole, currentPageNo, pageSize);
+        sqlSession.close();
         return userList;
     }
 
     public User getUserView(int id) {
-        Connection connection = null;
+        sqlSession = BaseDao.getSqlSession();
+        mapper = sqlSession.getMapper(UserDao.class);
         User user = null;
-        try {
-            connection = BaseDao.getConnection();
-            user = userDao.getUserView(connection, id);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            BaseDao.close(connection, null, null);
-        }
+        user = mapper.getUserView(id);
+        sqlSession.close();
         return user;
     }
 
     public boolean updateUser(User user) {
+        sqlSession = BaseDao.getSqlSession();
         boolean isUpdate = false;
-
-        try {
-            Connection connection = BaseDao.getConnection();
-            if (connection != null) {
-                int update = userDao.updateUser(connection, user);
-                if (update > 0) {
-                    isUpdate = true;
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        mapper = sqlSession.getMapper(UserDao.class);
+        int update = mapper.updateUser(user);
+        if (update > 0) {
+            isUpdate = true;
         }
+        sqlSession.close();
         return isUpdate;
     }
 
     public int addUser(User user) {
+        sqlSession = BaseDao.getSqlSession();
         int update = 0;
-        Connection connection = null;
-        try {
-            connection = BaseDao.getConnection();
-            if (connection != null) {
-                update = userDao.addUser(connection, user);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            BaseDao.close(connection, null, null);
-        }
+        mapper = sqlSession.getMapper(UserDao.class);
+        update = mapper.addUser(user);
+        sqlSession.close();
         return update;
     }
 
     public int getUserCountByUserCode(String userCode) {
-        Connection connection = null;
+        sqlSession = BaseDao.getSqlSession();
         int count = 0;
-        try {
-            connection = BaseDao.getConnection();
-            if (connection != null) {
-                count = userDao.getUserCountByUserCode(connection, userCode);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } finally {
-            BaseDao.close(connection, null, null);
-        }
+        mapper = sqlSession.getMapper(UserDao.class);
+        count = mapper.getUserCountByUserCode(userCode);
+        sqlSession.close();
         return count;
     }
 
     @Test
     public void test() {
-//        UserServiceImpl userService = new UserServiceImpl();
-//        System.out.println(userService.getUserCountByUserCode("aaa"));
+        UserService userService = new UserServiceImpl();
+        userService.getUserCount("", 0);
     }
 }

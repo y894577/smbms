@@ -2,7 +2,7 @@ package com.test.servlet.user;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.util.StringUtils;
 import com.test.dao.BaseDao;
 import com.test.pojo.Role;
 import com.test.pojo.User;

@@ -1,6 +1,5 @@
 package com.test.dao.user;
 
-import com.test.pojo.Role;
 import com.test.pojo.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,22 +8,28 @@ import java.util.List;
 
 public interface UserDao {
     //获取登录的用户
-    public User getLoginUser(@Param("userCode")String userCode, @Param("userPassword")String userPassword);
+    public User getLoginUser(@Param("userCode") String userCode,
+                             @Param("userPassword") String userPassword);
 
     //修改用户密码
-    public int updatePwd(Connection connection, int id, String updatePassword);
+    public int updatePwd(@Param("id") int id,
+                         @Param("userPassword") String updatePassword);
 
     //查询用户总数
-    public int getUserCount(Connection connection, String userName, int userRole);
+    public int getUserCount(@Param("userName") String userName,
+                            @Param("userRole") int userRole);
 
     //获取用户列表
-    public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize);
+    public List<User> getUserList(@Param("userName") String userName,
+                                  @Param("userRole") Integer userRole,
+                                  @Param("currentPageNo") int currentPageNo,
+                                  @Param("pageSize") int pageSize);
 
-    public User getUserView(Connection connection, int id);
+    public User getUserView(@Param("id") int id);
 
-    public int updateUser(Connection connection, User user);
+    public int updateUser(User user);
 
-    public int addUser(Connection connection,User user);
+    public int addUser(User user);
 
-    public int getUserCountByUserCode(Connection connection, String userCode);
+    public int getUserCountByUserCode(@Param("userCode") String userCode);
 }

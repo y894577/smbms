@@ -7,6 +7,10 @@ import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import sun.nio.cs.ext.GB18030;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class UserDaoTest {
     SqlSession sqlSession = null;
@@ -46,6 +50,23 @@ public class UserDaoTest {
 //        Integer i = mapper.addUser(user);
 //        System.out.println(i);
 //    }
+
+    @Test
+    public void getList(){
+        int userCount = mapper.getUserCount("", 0);
+        System.out.println(userCount);
+    }
+
+    @Test
+    public void getUserList(){
+        String userName = "%"+"a"+"%";
+
+        List<User> list = mapper.getUserList(null, 1, 1, 100);
+        System.out.println(list.size());
+        for (User user : list) {
+            System.out.println(user.toString());
+        }
+    }
 
     @After
     public void close(){

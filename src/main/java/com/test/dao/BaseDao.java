@@ -21,6 +21,7 @@ public class BaseDao {
     private static final String password;
 
     private static SqlSessionFactory sqlSessionFactory;
+    static SqlSession sqlSession = null;
 
     static {
         Properties properties = new Properties();
@@ -51,7 +52,7 @@ public class BaseDao {
     }
 
     public static SqlSession getSqlSession() {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+        sqlSession = sqlSessionFactory.openSession();
         return sqlSession;
     }
 

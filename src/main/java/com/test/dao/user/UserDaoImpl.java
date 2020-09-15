@@ -1,7 +1,6 @@
 package com.test.dao.user;
 
-import com.mysql.fabric.xmlrpc.base.Params;
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.jdbc.*;
 import com.test.dao.BaseDao;
 import com.test.pojo.Role;
 import com.test.pojo.User;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoImpl{
+public class UserDaoImpl {
     public User getLoginUser(String userCode, String userPassword) {
 //        PreparedStatement preparedStatement = null;
 //        User user = null;
@@ -51,100 +50,102 @@ public class UserDaoImpl{
     }
 
     public int updatePwd(Connection connection, int id, String updatePassword) {
-        int execute = 0;
-        Object[] params = {updatePassword, id};
-        String sql = "update smbms_user set userPassword = ? where id = ?;";
-
-        if (connection != null) {
-            try {
-                execute = BaseDao.update(connection, sql, params);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } finally {
-                BaseDao.close(connection, null, null);
-            }
-        }
-
-        return execute;
+//        int execute = 0;
+//        Object[] params = {updatePassword, id};
+//        String sql = "update smbms_user set userPassword = ? where id = ?;";
+//
+//        if (connection != null) {
+//            try {
+//                execute = BaseDao.update(connection, sql, params);
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            } finally {
+//                BaseDao.close(connection, null, null);
+//            }
+//        }
+//        return execute;
+        return 0;
     }
 
     public int getUserCount(Connection connection, String userName, int userRole) {
-        PreparedStatement preparedStatement = null;
-        int count = 0;
-        if (connection != null) {
-            StringBuffer sql = new StringBuffer();
-            ArrayList<Object> list = new ArrayList<Object>();
-            sql.append("select count(1) as count from smbms_user u,smbms_role r where u.userRole = r.id ");
-            if (!StringUtils.isNullOrEmpty(userName)) {
-                sql.append(" and u.userName like ?");
-                list.add("%" + userName + "%");
-            }
-            if (userRole > 0) {
-                sql.append(" and u.userRole = ?");
-                list.add(userRole);
-            }
-            Object[] params = list.toArray();
-            try {
-                ResultSet resultSet = BaseDao.execute(connection, sql.toString(), params);
-                if (resultSet.next()) {
-                    count = resultSet.getInt("count");
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } finally {
-                BaseDao.close(connection, preparedStatement, null);
-            }
-        }
-        return count;
+//        PreparedStatement preparedStatement = null;
+//        int count = 0;
+//        if (connection != null) {
+//            StringBuffer sql = new StringBuffer();
+//            ArrayList<Object> list = new ArrayList<Object>();
+//            sql.append("select count(1) as count from smbms_user u,smbms_role r where u.userRole = r.id ");
+//            if (!StringUtils.isNullOrEmpty(userName)) {
+//                sql.append(" and u.userName like ?");
+//                list.add("%" + userName + "%");
+//            }
+//            if (userRole > 0) {
+//                sql.append(" and u.userRole = ?");
+//                list.add(userRole);
+//            }
+//            Object[] params = list.toArray();
+//            try {
+//                ResultSet resultSet = BaseDao.execute(connection, sql.toString(), params);
+//                if (resultSet.next()) {
+//                    count = resultSet.getInt("count");
+//                }
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            } finally {
+//                BaseDao.close(connection, preparedStatement, null);
+//            }
+//        }
+//        return count;
+        return 0;
     }
 
     public List<User> getUserList(Connection connection, String userName, int userRole, int currentPageNo, int pageSize) {
-        List<User> userList = new ArrayList<User>();
-
-        PreparedStatement preparedStatement = null;
-
-        StringBuffer sql = new StringBuffer();
-
-        List<Object> list = new ArrayList<Object>();
-
-        ResultSet resultSet = null;
-
-        if (connection != null) {
-            sql.append("select u.*,r.roleName as userRoleName from smbms_user u , smbms_role r where u.userRole = r.id ");
-            if (!StringUtils.isNullOrEmpty(userName)) {
-                sql.append(" and u.userName like ?");
-                list.add("%" + userName + "%");
-            }
-            if (userRole > 0) {
-                sql.append(" and u.userRole = ?");
-                list.add(userRole);
-            }
-            sql.append(" order by creationDate DESC limit ?,?");
-            currentPageNo = (currentPageNo - 1) * pageSize;
-            list.add(currentPageNo);
-            list.add(pageSize);
-            Object[] params = list.toArray();
-            try {
-                resultSet = BaseDao.execute(connection, sql.toString(), params);
-                while (resultSet.next()) {
-                    User user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setUserCode(resultSet.getString("userCode"));
-                    user.setUserName(resultSet.getString("userName"));
-                    user.setGender(resultSet.getInt("gender"));
-                    user.setBirthday(resultSet.getDate("birthday"));
-                    user.setPhone(resultSet.getString("phone"));
-                    user.setUserRole(resultSet.getInt("userRole"));
-                    user.setUserRoleName(resultSet.getString("userRoleName"));
-                    userList.add(user);
-                }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } finally {
-                BaseDao.close(connection, preparedStatement, resultSet);
-            }
-        }
-        return userList;
+//        List<User> userList = new ArrayList<User>();
+//
+//        PreparedStatement preparedStatement = null;
+//
+//        StringBuffer sql = new StringBuffer();
+//
+//        List<Object> list = new ArrayList<Object>();
+//
+//        ResultSet resultSet = null;
+//
+//        if (connection != null) {
+//            sql.append("select u.*,r.roleName as userRoleName from smbms_user u , smbms_role r where u.userRole = r.id ");
+//            if (!StringUtils.isNullOrEmpty(userName)) {
+//                sql.append(" and u.userName like ?");
+//                list.add("%" + userName + "%");
+//            }
+//            if (userRole > 0) {
+//                sql.append(" and u.userRole = ?");
+//                list.add(userRole);
+//            }
+//            sql.append(" order by creationDate DESC limit ?,?");
+//            currentPageNo = (currentPageNo - 1) * pageSize;
+//            list.add(currentPageNo);
+//            list.add(pageSize);
+//            Object[] params = list.toArray();
+//            try {
+//                resultSet = BaseDao.execute(connection, sql.toString(), params);
+//                while (resultSet.next()) {
+//                    User user = new User();
+//                    user.setId(resultSet.getInt("id"));
+//                    user.setUserCode(resultSet.getString("userCode"));
+//                    user.setUserName(resultSet.getString("userName"));
+//                    user.setGender(resultSet.getInt("gender"));
+//                    user.setBirthday(resultSet.getDate("birthday"));
+//                    user.setPhone(resultSet.getString("phone"));
+//                    user.setUserRole(resultSet.getInt("userRole"));
+//                    user.setUserRoleName(resultSet.getString("userRoleName"));
+//                    userList.add(user);
+//                }
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            } finally {
+//                BaseDao.close(connection, preparedStatement, resultSet);
+//            }
+//        }
+//        return userList;
+        return null;
     }
 
     public User getUserView(Connection connection, int id) {
@@ -214,7 +215,7 @@ public class UserDaoImpl{
                 update = BaseDao.update(connection, sql, params);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
-            }finally {
+            } finally {
                 BaseDao.close(connection, null, null);
             }
         }
@@ -235,8 +236,8 @@ public class UserDaoImpl{
                 }
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
-            }finally {
-                BaseDao.close(connection, null,resultSet);
+            } finally {
+                BaseDao.close(connection, null, resultSet);
             }
         }
         return count;
