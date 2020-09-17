@@ -1,5 +1,6 @@
 package com.test.service.provider;
 
+import com.mysql.cj.util.StringUtils;
 import com.test.dao.BaseDao;
 import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Provider;
@@ -22,7 +23,14 @@ public class ProviderServiceImpl implements ProviderService {
         sqlSession = BaseDao.getSqlSession();
         mapper = sqlSession.getMapper(ProviderDao.class);
         List<Provider> providerList = new ArrayList<Provider>();
+        if (!StringUtils.isNullOrEmpty(proCode)) {
+            proCode = "%" + proCode + "%";
+        }
+        if (!StringUtils.isNullOrEmpty(proName)) {
+            proName = "%" + proName + "%";
+        }
         providerList = mapper.getProviderListByCodeAndName(proCode, proName);
+        sqlSession.close();
         return providerList;
     }
 }

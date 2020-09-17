@@ -59,7 +59,9 @@ public class UserServlet extends HttpServlet {
             } else if (method.equals("getrolelist")) {
                 this.getRoleList(req, resp);
             } else if (method.equals("ucexist")) {
-                this.userExist(req,resp);
+                this.userExist(req, resp);
+            } else if (method.equals("deluser")) {
+                this.deleteUser(req, resp);
             }
         }
     }
@@ -290,8 +292,8 @@ public class UserServlet extends HttpServlet {
         Map<String, String> resultMap = new HashMap<String, String>();
         if (count > 0) {
             resultMap.put("userCode", "exist");
-        }else {
-            resultMap.put("userCode","canbeused");
+        } else {
+            resultMap.put("userCode", "canbeused");
         }
         resp.setContentType("application/json;charset=utf-8");
         try {
@@ -303,4 +305,26 @@ public class UserServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
+    private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String userid = req.getParameter("uid");
+        UserService userService = new UserServiceImpl();
+        Map<String, String> resultMap = new HashMap<String, String>();
+        if (!StringUtils.isNullOrEmpty(userid)) {
+            boolean isDelete = userService.deleteUser(Integer.parseInt(userid));
+            if (isDelete) {
+                resultMap.put("delResult", "true");
+            } else
+                resultMap.put("delResult", "false");
+        } else {
+            resultMap.put("delResult", "notexist");
+        }
+        resp.setContentType("application/json;charset=utf-8");
+        PrintWriter writer = resp.getWriter();
+        String jsonString = JSONArray.toJSONString(resultMap);
+        writer.write(jsonString);
+        writer.flush();
+        writer.close();
+    }
+
 }

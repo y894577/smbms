@@ -24,11 +24,9 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getRoleList() {
         sqlSession = BaseDao.getSqlSession();
         mapper = sqlSession.getMapper(RoleDao.class);
-        Connection connection = null;
         List<Role> roleList = null;
-
         roleList = mapper.getRoleList();
-
+        sqlSession.close();
         return roleList;
     }
 

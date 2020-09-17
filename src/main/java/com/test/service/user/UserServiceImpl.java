@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         if (update > 0) {
             isUpdate = true;
         }
+        sqlSession.commit();
         sqlSession.close();
         return isUpdate;
     }
@@ -98,9 +99,23 @@ public class UserServiceImpl implements UserService {
         return count;
     }
 
+    public boolean deleteUser(int id) {
+        sqlSession = BaseDao.getSqlSession();
+        boolean isDelete = false;
+        mapper = sqlSession.getMapper(UserDao.class);
+        int i = mapper.deleteUser(id);
+        sqlSession.commit();
+        System.out.println("delete" + i);
+        if (i > 0) {
+            isDelete = true;
+        }
+        sqlSession.close();
+        return isDelete;
+    }
+
     @Test
     public void test() {
         UserService userService = new UserServiceImpl();
-        userService.getUserCount("", 0);
+        userService.deleteUser(9);
     }
 }
