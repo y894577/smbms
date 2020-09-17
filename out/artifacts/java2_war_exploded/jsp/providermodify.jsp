@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="/jsp/common/head.jsp"%>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
@@ -10,6 +10,10 @@
       <div class="providerAdd">
           <form id="providerForm" name="providerForm" method="post" action="${pageContext.request.contextPath }/jsp/provider.do">
               <!--div的class 为error是验证错误，ok是验证成功-->
+			  <div>
+                  <label for="proCode">供应商ID：</label>
+                  <input type="text" name="id" id="id" value="${provider.id }" readonly="readonly"> 
+              </div>
               <div class="">
                   <label for="proCode">供应商编码：</label>
                   <input type="text" name="proCode" id="proCode" value="${provider.proCode }" readonly="readonly"> 

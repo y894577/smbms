@@ -9,4 +9,8 @@ import java.util.List;
 public interface ProviderDao {
     List<Provider> getProviderListByCodeAndName(@Param("proCode") String proCode,
                                                 @Param("proName") String proName);
+
+    Provider getProviderById(@Param("id") int id);
+
+    int updateProvider(Provider provider);
 }

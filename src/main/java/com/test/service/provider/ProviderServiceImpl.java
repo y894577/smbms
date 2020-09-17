@@ -33,4 +33,24 @@ public class ProviderServiceImpl implements ProviderService {
         sqlSession.close();
         return providerList;
     }
+
+    public Provider getProviderById(int id) {
+        sqlSession = BaseDao.getSqlSession();
+        mapper = sqlSession.getMapper(ProviderDao.class);
+        Provider provider = mapper.getProviderById(id);
+        sqlSession.close();
+        return provider;
+    }
+
+    public boolean updateProvider(Provider provider) {
+        sqlSession = BaseDao.getSqlSession();
+        mapper = sqlSession.getMapper(ProviderDao.class);
+        boolean isUpdate = false;
+        int i = mapper.updateProvider(provider);
+        if (i > 0) {
+            isUpdate = true;
+        }
+        return isUpdate;
+    }
+
 }

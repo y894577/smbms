@@ -3,10 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+
     <properties resource="db.properties"/>
+
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
     <typeAliases>
         <typeAlias type="com.test.pojo.User" alias="User"/>
+        <typeAlias type="com.test.pojo.Provider" alias="Provider"/>
+        <typeAlias type="com.test.pojo.Role" alias="Role"/>
     </typeAliases>
+    
+
 
     <environments default="development">
         <environment id="development">
@@ -22,6 +32,8 @@
 
     <mappers>
         <mapper resource="com/test/dao/user/UserMapper.xml"/>
+        <mapper resource="com/test/dao/provider/ProviderMapper.xml"/>
+        <mapper resource="com/test/dao/role/RoleMapper.xml"/>
     </mappers>
 
 </configuration>
