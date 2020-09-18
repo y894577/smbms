@@ -12,4 +12,6 @@ public interface ProviderService {
 
     boolean updateProvider(Provider provider);
 
+    int deleteProvider(int proid);
+
 }

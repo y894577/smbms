@@ -9,6 +9,7 @@
       </div>
       <div class="providerAdd">
           <form id="providerForm" name="providerForm" method="post" action="${pageContext.request.contextPath }/jsp/provider.do">
+              <input type="hidden" name="method" value="modifyexe">
               <!--div的class 为error是验证错误，ok是验证成功-->
 			  <div>
                   <label for="proCode">供应商ID：</label>

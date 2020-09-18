@@ -18,10 +18,10 @@
     </select>
 
     <update id="updateProvider">
-        update smbms_provider set proCode = #{proCode} and proName = #{proName}
-         and proContact = #{proContact} andproPhone =#{proPhone}
-          and proAddress#{proAddress} and proFax = #{proFax}
-           and proDesc = #{proDesc} where id = #{id}
+        update smbms_provider set proCode = #{proCode} , proName = #{proName}
+         , proContact = #{proContact} , proPhone = #{proPhone}
+          , proAddress = #{proAddress} , proFax = #{proFax}
+           , proDesc = #{proDesc} where id = #{id}
     </update>
 
 </mapper>

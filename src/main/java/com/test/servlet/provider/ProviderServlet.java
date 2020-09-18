@@ -1,6 +1,8 @@
 package com.test.servlet.provider;
 
 import com.mysql.cj.util.StringUtils;
+import com.test.dao.provider.ProviderDao;
+import com.test.dao.provider.ProviderDaoImpl;
 import com.test.pojo.Provider;
 import com.test.pojo.User;
 import com.test.service.provider.ProviderService;
@@ -12,8 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ProviderServlet extends HttpServlet {
     @Override
@@ -25,15 +26,21 @@ public class ProviderServlet extends HttpServlet {
             this.getProviderView(req, resp, "providerview.jsp");
         } else if (method.equals("modify")) {
             this.getProviderView(req, resp, "providermodify.jsp");
+        } else if (method.equals("delprovider")) {
+
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
-        System.out.println(method);
-        if (method.equals(null)) {
-            this.modifyProvider(req,resp);
+        Enumeration enu = req.getParameterNames();
+        while (enu.hasMoreElements()) {
+            String paraName = (String) enu.nextElement();
+            System.out.println(paraName + ": " + req.getParameter(paraName));
+        }
+        if (method.equals("modifyexe")) {
+            this.modifyProvider(req, resp);
         }
     }
 
@@ -63,6 +70,7 @@ public class ProviderServlet extends HttpServlet {
     }
 
     public void modifyProvider(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
         String proCode = req.getParameter("proCode");
         String proName = req.getParameter("proName");
         String proContact = req.getParameter("proContact");
@@ -71,7 +79,8 @@ public class ProviderServlet extends HttpServlet {
         String proFax = req.getParameter("proFax");
         String proDesc = req.getParameter("proDesc");
 
-        Provider provider  = new Provider();
+        Provider provider = new Provider();
+        provider.setId(Integer.parseInt(id));
         provider.setProCode(proCode);
         provider.setProName(proName);
         provider.setProContact(proContact);
@@ -83,7 +92,31 @@ public class ProviderServlet extends HttpServlet {
         provider.setModifyDate(new Date());
 
         ProviderService providerService = new ProviderServiceImpl();
-        providerService.updateProvider(provider);
+        boolean isUpdate = providerService.updateProvider(provider);
+        if (isUpdate) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/provider.do?method=query");
+        } else {
+            req.getRequestDispatcher("providermodify.jsp").forward(req, resp);
+        }
+    }
+
+    public void deleteProvider(HttpServletRequest req, HttpServletResponse resp) {
+        String proid = req.getParameter("proid");
+        if (!StringUtils.isNullOrEmpty("proid")) {
+            ProviderService providerService = new ProviderServiceImpl();
+            Map<String, Object> resultMap = new HashMap<String, Object>();
+            int result = providerService.deleteProvider(Integer.parseInt(proid));
+            if (result == 0){
+                //删除成功
+                resultMap.put("delResult", "true");
+            } else if (result == -1) {
+                //删除失败
+                resultMap.put("delResult", "false");
+            }else {
+                //存在订单
+                resultMap.put("delResult", result);
+            }
+        }
     }
 
 

@@ -13,4 +13,6 @@ public interface ProviderDao {
     Provider getProviderById(@Param("id") int id);
 
     int updateProvider(Provider provider);
+
+    int deleteProvider(@Param("id") int id);
 }
