@@ -34,6 +34,7 @@
         <mapper resource="com/test/dao/user/UserMapper.xml"/>
         <mapper resource="com/test/dao/provider/ProviderMapper.xml"/>
         <mapper resource="com/test/dao/role/RoleMapper.xml"/>
+        <mapper resource="com/test/dao/bill/BillMapper.xml"/>
     </mappers>
 
 </configuration>

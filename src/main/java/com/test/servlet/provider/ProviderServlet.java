@@ -1,6 +1,8 @@
 package com.test.servlet.provider;
 
+import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
+import com.sun.xml.internal.fastinfoset.util.StringArray;
 import com.test.dao.provider.ProviderDao;
 import com.test.dao.provider.ProviderDaoImpl;
 import com.test.pojo.Provider;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class ProviderServlet extends HttpServlet {
@@ -27,7 +30,7 @@ public class ProviderServlet extends HttpServlet {
         } else if (method.equals("modify")) {
             this.getProviderView(req, resp, "providermodify.jsp");
         } else if (method.equals("delprovider")) {
-
+            this.deleteProvider(req, resp);
         }
     }
 
@@ -100,22 +103,26 @@ public class ProviderServlet extends HttpServlet {
         }
     }
 
-    public void deleteProvider(HttpServletRequest req, HttpServletResponse resp) {
+    public void deleteProvider(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String proid = req.getParameter("proid");
         if (!StringUtils.isNullOrEmpty("proid")) {
             ProviderService providerService = new ProviderServiceImpl();
             Map<String, Object> resultMap = new HashMap<String, Object>();
             int result = providerService.deleteProvider(Integer.parseInt(proid));
-            if (result == 0){
+            if (result == 0) {
                 //删除成功
                 resultMap.put("delResult", "true");
             } else if (result == -1) {
                 //删除失败
                 resultMap.put("delResult", "false");
-            }else {
+            } else {
                 //存在订单
                 resultMap.put("delResult", result);
             }
+            PrintWriter writer = resp.getWriter();
+            writer.write(JSONArray.toJSONString(resultMap));
+            writer.flush();
+            writer.close();
         }
     }
 

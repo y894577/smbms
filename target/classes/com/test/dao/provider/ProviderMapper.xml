@@ -24,4 +24,8 @@
            , proDesc = #{proDesc} where id = #{id}
     </update>
 
+    <delete id="deleteProvider">
+        delete * from smbms_provider where id = #{id}
+    </delete>
+
 </mapper>

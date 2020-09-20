@@ -1,7 +1,9 @@
 package com.test;
 
 import com.test.dao.BaseDao;
+import com.test.dao.bill.BillDao;
 import com.test.dao.user.UserDao;
+import com.test.pojo.Bill;
 import com.test.pojo.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.After;
@@ -15,41 +17,20 @@ import java.util.List;
 public class UserDaoTest {
     SqlSession sqlSession = null;
     UserDao mapper = null;
+    BillDao billDao = null;
 
     @Before
     public void init(){
         sqlSession = BaseDao.getSqlSession();
         mapper = sqlSession.getMapper(UserDao.class);
+        billDao = sqlSession.getMapper(BillDao.class);
     }
     @Test
     public void update() {
-//        User user = new User();
-//        user.setId(16);
-//        user.setUserCode("abc");
-//        user.setUserName("abc");
-//        Integer i = mapper.updateUser(user);
-//        System.out.println(i);
         User admin = mapper.getLoginUser("admin", "");
-//        System.out.println(admin.getId());
 
     }
 
-//    @Test
-//    public void delete(){
-//        User user = new User();
-//        user.setId(16);
-//        System.out.println(mapper.deleteUser(user));
-//    }
-
-//    @Test
-//    public void add(){
-//        User user = new User();
-//        user.setId(16);
-//        user.setUserCode("abc");
-//        user.setUserName("abc");
-//        Integer i = mapper.addUser(user);
-//        System.out.println(i);
-//    }
 
     @Test
     public void getList(){
@@ -66,6 +47,13 @@ public class UserDaoTest {
         for (User user : list) {
             System.out.println(user.toString());
         }
+    }
+
+    @Test
+    public void getBillCount(){
+        Integer i = 1;
+        int count = billDao.getBillCountByProId(i);
+        System.out.println(count);
     }
 
     @After
