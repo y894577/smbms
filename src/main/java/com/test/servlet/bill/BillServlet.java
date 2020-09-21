@@ -1,5 +1,6 @@
 package com.test.servlet.bill;
 
+import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import com.test.pojo.Bill;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -24,7 +26,11 @@ public class BillServlet extends HttpServlet {
         if (method.equals("query")) {
             this.query(req, resp);
         } else if (method.equals("view")) {
-            this.getBillView(req,resp);
+            this.getBillView(req, resp, "billview.jsp");
+        } else if (method.equals("modify")) {
+            this.getBillView(req, resp, "billmodify.jsp");
+        } else if (method.equals("getproviderlist")) {
+            this.getProviderList(req, resp);
         }
     }
 
@@ -53,7 +59,22 @@ public class BillServlet extends HttpServlet {
         req.getRequestDispatcher("billlist.jsp").forward(req, resp);
     }
 
-    private void getBillView(HttpServletRequest req, HttpServletResponse resp) {
+    private void getBillView(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
         String billid = req.getParameter("billid");
+        BillService billService = new BillServiceImpl();
+        Bill bill = billService.getBillById(billid);
+        req.setAttribute("bill", bill);
+
+        req.getRequestDispatcher(url).forward(req, resp);
+    }
+
+    private void getProviderList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        ProviderService providerService = new ProviderServiceImpl();
+        List<Provider> list = providerService.getProviderListByCodeAndName(null, null);
+        resp.setContentType("json/application");
+        PrintWriter writer = resp.getWriter();
+        writer.write(JSONArray.toJSONString(list));
+        writer.flush();
+        writer.close();
     }
 }

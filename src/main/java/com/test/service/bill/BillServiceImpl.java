@@ -40,4 +40,16 @@ public class BillServiceImpl implements BillService {
         sqlSession.close();
         return billList;
     }
+
+    public Bill getBillById(String billid) {
+        sqlSession = BaseDao.getSqlSession();
+        billMapper = sqlSession.getMapper(BillDao.class);
+        int id = 0;
+        if (!StringUtils.isNullOrEmpty(billid)) {
+            id = Integer.parseInt(billid);
+        }
+        Bill bill = billMapper.getBillById(id);
+        sqlSession.close();
+        return bill;
+    }
 }

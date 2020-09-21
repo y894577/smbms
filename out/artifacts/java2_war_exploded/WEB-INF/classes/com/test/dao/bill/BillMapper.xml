@@ -9,16 +9,19 @@
     </select>
 
     <select id="getBillList" resultType="Bill">
-        select * from smbms_bill where 1=1
+        select b.* , p.proName as providerName from smbms_bill as b , smbms_provider as p where b.providerId = p.id
         <if test="productName != '' and productName != null">
-            and productName = #{productName}
+            and b.productName = #{productName}
         </if>
         <if test="providerId > 0">
-            and providerId = #{providerId}
+            and b.providerId = #{providerId}
         </if>
         <if test="isPayment > 0">
-            and isPayment = #{isPayment}
+            and b.isPayment = #{isPayment}
         </if>
+    </select>
 
+    <select id="getBillById" resultType="Bill">
+        select b.* , p.proName as providerName from smbms_bill as b, smbms_provider as p where b.providerId = p.id and b.id = #{id}
     </select>
 </mapper>

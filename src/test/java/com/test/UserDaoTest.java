@@ -56,6 +56,13 @@ public class UserDaoTest {
         System.out.println(count);
     }
 
+    @Test
+    public void getBill(){
+        Integer i = 2;
+        Bill bill = billDao.getBillById(2);
+        System.out.println(bill.getProviderId());
+    }
+
     @After
     public void close(){
         sqlSession.commit();
