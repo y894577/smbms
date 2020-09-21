@@ -37,11 +37,11 @@ public class ProviderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
-        Enumeration enu = req.getParameterNames();
-        while (enu.hasMoreElements()) {
-            String paraName = (String) enu.nextElement();
-            System.out.println(paraName + ": " + req.getParameter(paraName));
-        }
+//        Enumeration enu = req.getParameterNames();
+//        while (enu.hasMoreElements()) {
+//            String paraName = (String) enu.nextElement();
+//            System.out.println(paraName + ": " + req.getParameter(paraName));
+//        }
         if (method.equals("modifyexe")) {
             this.modifyProvider(req, resp);
         }

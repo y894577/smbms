@@ -50,6 +50,15 @@
         <url-pattern>/jsp/provider.do</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>BillServlet</servlet-name>
+        <servlet-class>com.test.servlet.bill.BillServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BillServlet</servlet-name>
+        <url-pattern>/jsp/bill.do</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>com.test.filter.CharacterEncodingFilter</filter-class>

@@ -7,4 +7,18 @@
     <select id="getBillCountByProId" resultType="int">
         select count(1) as count from smbms_bill where providerId = #{proid}
     </select>
+
+    <select id="getBillList" resultType="Bill">
+        select * from smbms_bill where 1=1
+        <if test="productName != '' and productName != null">
+            and productName = #{productName}
+        </if>
+        <if test="providerId > 0">
+            and providerId = #{providerId}
+        </if>
+        <if test="isPayment > 0">
+            and isPayment = #{isPayment}
+        </if>
+
+    </select>
 </mapper>

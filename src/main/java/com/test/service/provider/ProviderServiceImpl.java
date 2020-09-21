@@ -7,14 +7,12 @@ import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Provider;
 import org.apache.ibatis.session.SqlSession;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProviderServiceImpl implements ProviderService {
     private SqlSession sqlSession = null;
-    private ProviderDao mapper = null;
+    private ProviderDao providerMapper = null;
     private BillDao billMapper = null;
 
     public ProviderServiceImpl() {
@@ -23,7 +21,7 @@ public class ProviderServiceImpl implements ProviderService {
 
     public List<Provider> getProviderListByCodeAndName(String proCode, String proName) {
         sqlSession = BaseDao.getSqlSession();
-        mapper = sqlSession.getMapper(ProviderDao.class);
+        providerMapper = sqlSession.getMapper(ProviderDao.class);
         List<Provider> providerList = new ArrayList<Provider>();
         if (!StringUtils.isNullOrEmpty(proCode)) {
             proCode = "%" + proCode + "%";
@@ -31,24 +29,24 @@ public class ProviderServiceImpl implements ProviderService {
         if (!StringUtils.isNullOrEmpty(proName)) {
             proName = "%" + proName + "%";
         }
-        providerList = mapper.getProviderListByCodeAndName(proCode, proName);
+        providerList = providerMapper.getProviderListByCodeAndName(proCode, proName);
         sqlSession.close();
         return providerList;
     }
 
     public Provider getProviderById(int id) {
         sqlSession = BaseDao.getSqlSession();
-        mapper = sqlSession.getMapper(ProviderDao.class);
-        Provider provider = mapper.getProviderById(id);
+        providerMapper = sqlSession.getMapper(ProviderDao.class);
+        Provider provider = providerMapper.getProviderById(id);
         sqlSession.close();
         return provider;
     }
 
     public boolean updateProvider(Provider provider) {
         sqlSession = BaseDao.getSqlSession();
-        mapper = sqlSession.getMapper(ProviderDao.class);
+        providerMapper = sqlSession.getMapper(ProviderDao.class);
         boolean isUpdate = false;
-        int i = mapper.updateProvider(provider);
+        int i = providerMapper.updateProvider(provider);
         if (i > 0) {
             isUpdate = true;
         }
@@ -64,10 +62,10 @@ public class ProviderServiceImpl implements ProviderService {
     public int deleteProvider(int proid) {
         sqlSession = BaseDao.getSqlSession();
         billMapper = sqlSession.getMapper(BillDao.class);
-        mapper = sqlSession.getMapper(ProviderDao.class);
+        providerMapper = sqlSession.getMapper(ProviderDao.class);
         int billCount = billMapper.getBillCountByProId(proid);
         if (billCount == 0) {
-            int i = mapper.deleteProvider(proid);
+            int i = providerMapper.deleteProvider(proid);
             if (i > 0) {
                 return 0;
             } else {
