@@ -24,4 +24,19 @@
     <select id="getBillById" resultType="Bill">
         select b.* , p.proName as providerName from smbms_bill as b, smbms_provider as p where b.providerId = p.id and b.id = #{id}
     </select>
+
+    <update id="updateBill">
+        update smbms_bill
+        <set>
+            <if test="productName != null ">productName = #{productName},</if>
+            <if test="productUnit != null">productUnit = #{productUnit},</if>
+            <if test="productCount != null">productCount = #{productCount},</if>
+            <if test="totalPrice != null">totalPrice = #{totalPrice},</if>
+            <if test="providerId != null">providerId = #{providerId},</if>
+            <if test="isPayment != null">isPayment = #{isPayment},</if>
+            <if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+            <if test="modifyDate != null">modifyDate = #{modifyDate}</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

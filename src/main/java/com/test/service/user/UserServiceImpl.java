@@ -2,13 +2,10 @@ package com.test.service.user;
 
 import com.test.dao.BaseDao;
 import com.test.dao.user.UserDao;
-import com.test.dao.user.UserDaoImpl;
 import com.test.pojo.User;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl implements UserService {

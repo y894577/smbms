@@ -3,12 +3,15 @@ package com.test.servlet.bill;
 import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import com.test.dao.bill.BillDao;
 import com.test.pojo.Bill;
 import com.test.pojo.Provider;
+import com.test.pojo.User;
 import com.test.service.bill.BillService;
 import com.test.service.bill.BillServiceImpl;
 import com.test.service.provider.ProviderService;
 import com.test.service.provider.ProviderServiceImpl;
+import com.test.util.Constant;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -36,7 +41,10 @@ public class BillServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+        String method = req.getParameter("method");
+        if (method.equals("modifysave")) {
+            this.modify(req, resp);
+        }
     }
 
     public void query(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -76,5 +84,37 @@ public class BillServlet extends HttpServlet {
         writer.write(JSONArray.toJSONString(list));
         writer.flush();
         writer.close();
+    }
+
+    public void modify(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        BillService billService = new BillServiceImpl();
+        String id = req.getParameter("id");
+        String billCode = req.getParameter("billCode");
+        String productName = req.getParameter("productName");
+        String productUnit = req.getParameter("productUnit");
+        String productCount = req.getParameter("productCount");
+        String totalPrice = req.getParameter("totalPrice");
+        String providerId = req.getParameter("providerId");
+        String isPayment = req.getParameter("isPayment");
+
+        Bill bill = new Bill();
+        bill.setId(Integer.parseInt(id));
+        bill.setBillCode(billCode);
+        bill.setProductName(productName);
+        bill.setProductUnit(productUnit);
+        bill.setProductCount(new BigDecimal(productCount));
+        bill.setTotalPrice(new BigDecimal(totalPrice));
+        bill.setProviderId(Integer.parseInt(providerId));
+        bill.setIsPayment(Integer.parseInt(isPayment));
+        bill.setModifyBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
+        bill.setModifyDate(new Date());
+
+        boolean isUpdate = billService.updateBill(bill);
+
+        if (isUpdate) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/bill.do?method=query");
+        } else {
+            req.getRequestDispatcher("billmodify.jsp").forward(req, resp);
+        }
     }
 }

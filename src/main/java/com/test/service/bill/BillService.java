@@ -8,4 +8,6 @@ public interface BillService {
     List<Bill> getBillList(String productName, String providerId, String isPayment);
 
     Bill getBillById(String billid);
+
+    boolean updateBill(Bill bill);
 }

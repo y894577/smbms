@@ -52,4 +52,15 @@ public class BillServiceImpl implements BillService {
         sqlSession.close();
         return bill;
     }
+
+    public boolean updateBill(Bill bill){
+        boolean isUpdate = false;
+        sqlSession = BaseDao.getSqlSession();
+        billMapper = sqlSession.getMapper(BillDao.class);
+        int i = billMapper.updateBill(bill);
+        if (i > 0) {
+            isUpdate = true;
+        }
+        return isUpdate;
+    }
 }

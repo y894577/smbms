@@ -14,4 +14,6 @@ public interface BillDao {
 
     Bill getBillById(@Param("id") int id);
 
+    int updateBill(Bill bill);
+
 }
