@@ -1,8 +1,11 @@
 package com.test.pojo;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Data
 public class Bill {
     private Integer id;   //id
     private String billCode; //账单编码

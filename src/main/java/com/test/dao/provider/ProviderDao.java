@@ -3,7 +3,6 @@ package com.test.dao.provider;
 import com.test.pojo.Provider;
 import org.apache.ibatis.annotations.Param;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface ProviderDao {
@@ -15,4 +14,6 @@ public interface ProviderDao {
     int updateProvider(Provider provider);
 
     int deleteProvider(@Param("id") int id);
+
+    int addProvider(Provider provider);
 }

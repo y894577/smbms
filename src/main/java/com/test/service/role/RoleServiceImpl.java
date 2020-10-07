@@ -3,31 +3,40 @@ package com.test.service.role;
 import com.test.dao.BaseDao;
 import com.test.dao.role.RoleDao;
 import com.test.pojo.Role;
+import com.test.service.user.UserServiceImpl;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
 public class RoleServiceImpl implements RoleService {
-    private SqlSession sqlSession = null;
-    private RoleDao mapper = null;
+    private SqlSessionTemplate sqlSession = null;
+    private RoleDao roleMapper = null;
 
     public RoleServiceImpl() {
-
     }
 
+    public void setSqlSession(SqlSessionTemplate sqlSession) {
+        this.sqlSession = sqlSession;
+        roleMapper = sqlSession.getMapper(RoleDao.class);
+    }
+
+
     public List<Role> getRoleList() {
-        sqlSession = BaseDao.getSqlSession();
-        mapper = sqlSession.getMapper(RoleDao.class);
+
         List<Role> roleList = null;
-        roleList = mapper.getRoleList();
-        sqlSession.close();
+        roleList = roleMapper.getRoleList();
         return roleList;
     }
 
     @Test
     public void test() {
-        RoleServiceImpl roleService = new RoleServiceImpl();
+
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        RoleServiceImpl roleService = (RoleServiceImpl) context.getBean("RoleServiceImpl");
         System.out.println(roleService.getRoleList().size());
     }
 }

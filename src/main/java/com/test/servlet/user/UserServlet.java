@@ -1,17 +1,16 @@
 package com.test.servlet.user;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
-import com.test.dao.BaseDao;
 import com.test.pojo.Role;
 import com.test.pojo.User;
 import com.test.service.role.RoleService;
 import com.test.service.role.RoleServiceImpl;
-import com.test.service.user.UserService;
 import com.test.service.user.UserServiceImpl;
 import com.test.util.Constant;
 import com.test.util.PageSupport;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,9 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,8 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 public class UserServlet extends HttpServlet {
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    UserServiceImpl userService = (UserServiceImpl) context.getBean("UserServiceImpl");
+    RoleServiceImpl roleService = (RoleServiceImpl) context.getBean("RoleServiceImpl");
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String method = req.getParameter("method");
         if (method.equals("modifyexe")) {
             this.userModify(req, resp);
@@ -42,6 +43,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String method = req.getParameter("method");
         if (method != null) {
             if (method.equals("pwdmodify")) {
@@ -90,7 +92,6 @@ public class UserServlet extends HttpServlet {
         user.setModifyBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
         user.setModifyDate(new Date());
 
-        UserService userService = new UserServiceImpl();
         boolean isUpdate = userService.updateUser(user);
         try {
             if (isUpdate) {
@@ -108,9 +109,7 @@ public class UserServlet extends HttpServlet {
 
         String newpassword = req.getParameter("newpassword");
         if (user != null && !StringUtils.isNullOrEmpty(newpassword)) {
-            user = (User) user;
             Integer id = ((User) user).getId();
-            UserService userService = new UserServiceImpl();
             boolean isUpdate = userService.updatePwd(id, newpassword);
             if (isUpdate) {
                 req.setAttribute("message", "修改密码成功");
@@ -154,7 +153,6 @@ public class UserServlet extends HttpServlet {
         String tempCurrentPageNo = req.getParameter("pageIndex");
         int pageSize = 5;
         int queryUserRole = 0;
-        UserService userService = new UserServiceImpl();
 
         queryUserName = queryUserName == null ? "" : queryUserName;
         int currentPageNo = tempCurrentPageNo == null ? 1 : Integer.parseInt(tempCurrentPageNo);
@@ -183,7 +181,6 @@ public class UserServlet extends HttpServlet {
         List<User> userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
 
         //获取角色列表
-        RoleService roleService = new RoleServiceImpl();
         List<Role> roleList = roleService.getRoleList();
 
         req.setAttribute("userList", userList);
@@ -205,7 +202,6 @@ public class UserServlet extends HttpServlet {
 
     private void view(HttpServletRequest req, HttpServletResponse resp, String url) {
         String id = req.getParameter("uid");
-        UserService userService = new UserServiceImpl();
         if (!StringUtils.isNullOrEmpty(id)) {
             User user = userService.getUserView(Integer.parseInt(id));
             try {
@@ -221,7 +217,6 @@ public class UserServlet extends HttpServlet {
 
     private void userModify(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
         String id = req.getParameter("uid");
-        UserService userService = new UserServiceImpl();
         if (!StringUtils.isNullOrEmpty(id)) {
             User user = userService.getUserView(Integer.parseInt(id));
             try {
@@ -237,7 +232,6 @@ public class UserServlet extends HttpServlet {
 
     private void getRoleList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         List<Role> roleList = null;
-        RoleService roleService = new RoleServiceImpl();
         roleList = roleService.getRoleList();
         resp.setContentType("application/json;charset=utf-8");
         PrintWriter writer = resp.getWriter();
@@ -274,7 +268,6 @@ public class UserServlet extends HttpServlet {
         user.setCreatedBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
         user.setCreationDate(new Date());
 
-        UserService userService = new UserServiceImpl();
         int update = userService.addUser(user);
         if (update > 0) {
             try {
@@ -287,7 +280,6 @@ public class UserServlet extends HttpServlet {
 
     private void userExist(HttpServletRequest req, HttpServletResponse resp) {
         String userCode = req.getParameter("userCode");
-        UserService userService = new UserServiceImpl();
         int count = userService.getUserCountByUserCode(userCode);
         Map<String, String> resultMap = new HashMap<String, String>();
         if (count > 0) {
@@ -308,7 +300,6 @@ public class UserServlet extends HttpServlet {
 
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String userid = req.getParameter("uid");
-        UserService userService = new UserServiceImpl();
         Map<String, String> resultMap = new HashMap<String, String>();
         if (!StringUtils.isNullOrEmpty(userid)) {
             boolean isDelete = userService.deleteUser(Integer.parseInt(userid));

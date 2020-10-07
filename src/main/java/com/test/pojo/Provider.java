@@ -1,7 +1,10 @@
 package com.test.pojo;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class Provider {
     private Integer id;   //id
     private String proCode; //供应商编码

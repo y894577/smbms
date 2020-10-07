@@ -15,10 +15,6 @@ import java.util.Properties;
  * @description 操作数据的公共类
  */
 public class BaseDao {
-    private static final String driver;
-    private static final String url;
-    private static final String username;
-    private static final String password;
 
     private static SqlSessionFactory sqlSessionFactory;
     static SqlSession sqlSession = null;
@@ -33,11 +29,6 @@ public class BaseDao {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        driver = properties.getProperty("driver");
-        url = properties.getProperty("url");
-        username = properties.getProperty("username");
-        password = properties.getProperty("password");
 
 
         try {

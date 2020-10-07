@@ -37,4 +37,9 @@
         delete * from smbms_provider where id = #{id}
     </delete>
 
+    <insert id="addProvider">
+        insert into smbms_provider (proCode , proName , proContact , proPhone , proAddress , proFax , proDesc)
+         values (#{proCode} , #{proName} , #{proContact} , #{proPhone} , #{proAddress} , #{proFax} , #{proDesc})
+    </insert>
+
 </mapper>

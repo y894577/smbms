@@ -5,6 +5,8 @@ import com.test.service.user.UserService;
 import com.test.service.user.UserServiceImpl;
 import com.test.util.Constant;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,9 @@ import java.io.IOException;
 
 //控制层
 public class LoginServlet extends HttpServlet {
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    UserServiceImpl userService = (UserServiceImpl) context.getBean("UserServiceImpl");
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doPost(req, resp);
@@ -25,7 +30,6 @@ public class LoginServlet extends HttpServlet {
         String userCode = req.getParameter("userCode");
         String userPassword = req.getParameter("userPassword");
 
-        UserServiceImpl userService = new UserServiceImpl();
         User user = userService.login(userCode, userPassword);
 
         if (user != null) {

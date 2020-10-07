@@ -7,22 +7,25 @@ import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Bill;
 import com.test.pojo.Provider;
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.List;
 
 public class BillServiceImpl implements BillService {
-    private SqlSession sqlSession = null;
+    private SqlSessionTemplate sqlSession = null;
     private BillDao billMapper = null;
     private ProviderDao providerMapper = null;
 
     public BillServiceImpl() {
     }
 
-    public List<Bill> getBillList(String productName, String queryProviderId, String queryIsPayment) {
-        sqlSession = BaseDao.getSqlSession();
-        billMapper = sqlSession.getMapper(BillDao.class);
-        providerMapper = sqlSession.getMapper(ProviderDao.class);
+    public void setSqlSession(SqlSessionTemplate sqlSession){
+        this.sqlSession = sqlSession;
+        this.billMapper = sqlSession.getMapper(BillDao.class);
+        this.providerMapper = sqlSession.getMapper(ProviderDao.class);
+    }
 
+    public List<Bill> getBillList(String productName, String queryProviderId, String queryIsPayment) {
         int providerId = 0;
         int isPayment = 0;
         if (!StringUtils.isNullOrEmpty(queryProviderId)) {
@@ -37,25 +40,20 @@ public class BillServiceImpl implements BillService {
             productName = "%" + productName + "%";
         }
         List<Bill> billList = billMapper.getBillList(productName, providerId, isPayment);
-        sqlSession.close();
         return billList;
     }
 
     public Bill getBillById(String billid) {
-        sqlSession = BaseDao.getSqlSession();
-        billMapper = sqlSession.getMapper(BillDao.class);
         int id = 0;
         if (!StringUtils.isNullOrEmpty(billid)) {
             id = Integer.parseInt(billid);
         }
         Bill bill = billMapper.getBillById(id);
-        sqlSession.close();
         return bill;
     }
 
     public boolean updateBill(Bill bill){
         boolean isUpdate = false;
-        sqlSession = BaseDao.getSqlSession();
         billMapper = sqlSession.getMapper(BillDao.class);
         int i = billMapper.updateBill(bill);
         if (i > 0) {

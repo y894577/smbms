@@ -16,4 +16,6 @@ public interface BillDao {
 
     int updateBill(Bill bill);
 
+    int addBill(Bill bill);
+
 }

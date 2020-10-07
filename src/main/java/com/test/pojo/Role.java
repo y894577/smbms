@@ -1,7 +1,10 @@
 package com.test.pojo;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class Role {
     private Integer id;   //id
     private String roleCode; //角色编码

@@ -1,9 +1,10 @@
 package com.test.pojo;
 
-import org.apache.ibatis.annotations.Param;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class User {
     private Integer id; //id
     private String userCode; //用户编码

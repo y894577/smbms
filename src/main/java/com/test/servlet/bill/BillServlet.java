@@ -12,6 +12,8 @@ import com.test.service.bill.BillServiceImpl;
 import com.test.service.provider.ProviderService;
 import com.test.service.provider.ProviderServiceImpl;
 import com.test.util.Constant;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +27,10 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class BillServlet extends HttpServlet {
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    BillServiceImpl billService = (BillServiceImpl) context.getBean("BillServiceImpl");
+    ProviderServiceImpl providerService = (ProviderServiceImpl) context.getBean("ProviderServiceImpl");
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
@@ -48,8 +54,7 @@ public class BillServlet extends HttpServlet {
     }
 
     public void query(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BillService billService = new BillServiceImpl();
-        ProviderService providerService = new ProviderServiceImpl();
+
         List<Provider> providerList = providerService.getProviderListByCodeAndName(null, null);
 
         Enumeration enu = req.getParameterNames();
@@ -69,7 +74,6 @@ public class BillServlet extends HttpServlet {
 
     private void getBillView(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
         String billid = req.getParameter("billid");
-        BillService billService = new BillServiceImpl();
         Bill bill = billService.getBillById(billid);
         req.setAttribute("bill", bill);
 
@@ -77,7 +81,6 @@ public class BillServlet extends HttpServlet {
     }
 
     private void getProviderList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        ProviderService providerService = new ProviderServiceImpl();
         List<Provider> list = providerService.getProviderListByCodeAndName(null, null);
         resp.setContentType("json/application");
         PrintWriter writer = resp.getWriter();
@@ -87,7 +90,6 @@ public class BillServlet extends HttpServlet {
     }
 
     public void modify(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BillService billService = new BillServiceImpl();
         String id = req.getParameter("id");
         String billCode = req.getParameter("billCode");
         String productName = req.getParameter("productName");

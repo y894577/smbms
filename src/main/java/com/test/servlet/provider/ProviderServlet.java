@@ -2,11 +2,14 @@ package com.test.servlet.provider;
 
 import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
+import com.test.pojo.Bill;
 import com.test.pojo.Provider;
 import com.test.pojo.User;
 import com.test.service.provider.ProviderService;
 import com.test.service.provider.ProviderServiceImpl;
 import com.test.util.Constant;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +20,9 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class ProviderServlet extends HttpServlet {
+    ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    ProviderServiceImpl providerService = (ProviderServiceImpl) context.getBean("ProviderServiceImpl");
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
@@ -34,20 +40,17 @@ public class ProviderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String method = req.getParameter("method");
-//        Enumeration enu = req.getParameterNames();
-//        while (enu.hasMoreElements()) {
-//            String paraName = (String) enu.nextElement();
-//            System.out.println(paraName + ": " + req.getParameter(paraName));
-//        }
         if (method.equals("modifyexe")) {
             this.modifyProvider(req, resp);
+        } else if (method.equals("add")) {
+            this.addProvider(req, resp);
         }
     }
+
 
     public void query(HttpServletRequest req, HttpServletResponse resp) {
         String queryProCode = req.getParameter("queryProCode");
         String queryProName = req.getParameter("queryProName");
-        ProviderService providerService = new ProviderServiceImpl();
         List<Provider> providerList = providerService.getProviderListByCodeAndName(queryProCode, queryProName);
         req.setAttribute("providerList", providerList);
         try {
@@ -61,7 +64,6 @@ public class ProviderServlet extends HttpServlet {
 
     public void getProviderView(HttpServletRequest req, HttpServletResponse resp, String url) throws ServletException, IOException {
         String proid = req.getParameter("proid");
-        ProviderService providerService = new ProviderServiceImpl();
         if (!StringUtils.isNullOrEmpty(proid)) {
             Provider provider = providerService.getProviderById(Integer.parseInt(proid));
             req.setAttribute("provider", provider);
@@ -91,7 +93,6 @@ public class ProviderServlet extends HttpServlet {
         provider.setModifyBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
         provider.setModifyDate(new Date());
 
-        ProviderService providerService = new ProviderServiceImpl();
         boolean isUpdate = providerService.updateProvider(provider);
         if (isUpdate) {
             resp.sendRedirect(req.getContextPath() + "/jsp/provider.do?method=query");
@@ -123,5 +124,30 @@ public class ProviderServlet extends HttpServlet {
         }
     }
 
+    private void addProvider(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String proCode = req.getParameter("proCode");
+        String proName = req.getParameter("proName");
+        String proContact = req.getParameter("proContact");
+        String proPhone = req.getParameter("proPhone");
+        String proAddress = req.getParameter("proAddress");
+        String proFax = req.getParameter("proFax");
+        String proDesc = req.getParameter("proDesc");
+
+        Provider provider = new Provider();
+        provider.setProCode(proCode);
+        provider.setProName(proName);
+        provider.setProContact(proContact);
+        provider.setProPhone(proPhone);
+        provider.setProAddress(proAddress);
+        provider.setProFax(proFax);
+        provider.setProDesc(proDesc);
+        provider.setCreatedBy(((User) req.getSession().getAttribute(Constant.USER_SESSION)).getId());
+        provider.setCreationDate(new Date());
+
+        boolean isAdd = providerService.addProvider(provider);
+        if (isAdd) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/provider.do?method=query");
+        }
+    }
 
 }
