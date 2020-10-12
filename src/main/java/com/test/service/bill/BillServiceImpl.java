@@ -1,28 +1,26 @@
 package com.test.service.bill;
 
 import com.mysql.cj.util.StringUtils;
-import com.test.dao.BaseDao;
 import com.test.dao.bill.BillDao;
-import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Bill;
-import com.test.pojo.Provider;
 import org.apache.ibatis.session.SqlSession;
+import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
 public class BillServiceImpl implements BillService {
-    private SqlSessionTemplate sqlSession = null;
+    private SqlSession sqlSession = null;
     private BillDao billMapper = null;
-    private ProviderDao providerMapper = null;
 
     public BillServiceImpl() {
     }
 
-    public void setSqlSession(SqlSessionTemplate sqlSession){
+    public void setSqlSession(SqlSessionTemplate sqlSession) {
         this.sqlSession = sqlSession;
         this.billMapper = sqlSession.getMapper(BillDao.class);
-        this.providerMapper = sqlSession.getMapper(ProviderDao.class);
     }
 
     public List<Bill> getBillList(String productName, String queryProviderId, String queryIsPayment) {
@@ -35,7 +33,6 @@ public class BillServiceImpl implements BillService {
             isPayment = Integer.parseInt(queryIsPayment);
         }
 
-        List<Provider> providerList = providerMapper.getProviderListByCodeAndName(null, null);
         if (!StringUtils.isNullOrEmpty(productName)) {
             productName = "%" + productName + "%";
         }
@@ -52,13 +49,20 @@ public class BillServiceImpl implements BillService {
         return bill;
     }
 
-    public boolean updateBill(Bill bill){
+    public boolean updateBill(Bill bill) {
         boolean isUpdate = false;
-        billMapper = sqlSession.getMapper(BillDao.class);
-        int i = billMapper.updateBill(bill);
+        int i = sqlSession.update("com.test.dao.bill.BillDao.updateBill", bill);
         if (i > 0) {
             isUpdate = true;
         }
         return isUpdate;
+    }
+
+    @Test
+    public void test() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BillServiceImpl billService = (BillServiceImpl) context.getBean("BillServiceImpl");
+        System.out.println(billService.getBillById("1"));
+        System.out.println(billService.getBillList("", "1", "0"));
     }
 }

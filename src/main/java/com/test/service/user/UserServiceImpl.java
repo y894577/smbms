@@ -14,6 +14,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userMapper = null;
 
     public UserServiceImpl() {
+
     }
 
     public void setSqlSession(SqlSessionTemplate sqlSession){

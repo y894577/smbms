@@ -1,11 +1,9 @@
 package com.test.service.provider;
 
 import com.mysql.cj.util.StringUtils;
-import com.test.dao.BaseDao;
 import com.test.dao.bill.BillDao;
 import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Provider;
-import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.ArrayList;
@@ -73,7 +71,6 @@ public class ProviderServiceImpl implements ProviderService {
 
     public boolean addProvider(Provider provider) {
         boolean isAdd = false;
-        providerMapper = sqlSession.getMapper(ProviderDao.class);
         int i = providerMapper.addProvider(provider);
         if (i > 0) {
             isAdd = true;

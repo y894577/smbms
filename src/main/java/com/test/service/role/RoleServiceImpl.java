@@ -1,10 +1,7 @@
 package com.test.service.role;
 
-import com.test.dao.BaseDao;
 import com.test.dao.role.RoleDao;
 import com.test.pojo.Role;
-import com.test.service.user.UserServiceImpl;
-import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
@@ -26,11 +23,11 @@ public class RoleServiceImpl implements RoleService {
 
 
     public List<Role> getRoleList() {
-
         List<Role> roleList = null;
         roleList = roleMapper.getRoleList();
         return roleList;
     }
+
 
     @Test
     public void test() {
