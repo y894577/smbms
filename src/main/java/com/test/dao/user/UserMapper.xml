@@ -29,9 +29,6 @@
         <if test="userRole != 0">
             and u.userRole = ${userRole}
         </if>
-        <if test="currentPageNo!=null and pageSize!=null">
-            order by creationDate DESC limit ${currentPageNo},${pageSize}
-        </if>
     </select>
 
     <select id="getUserView" resultType="User">

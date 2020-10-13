@@ -7,10 +7,12 @@ import com.test.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/login.do")
@@ -21,19 +23,14 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping
-    public String login(HttpServletRequest req){
-        String userCode = req.getParameter("userCode");
-        String userPassword = req.getParameter("userPassword");
-
+    public String login(String userCode, String userPassword, HttpSession session, Model model) {
         User user = userService.login(userCode, userPassword);
 
         if (user != null) {
-            req.getSession().setAttribute(Constant.USER_SESSION, user);
-//            resp.sendRedirect("jsp/frame.jsp");
+            session.setAttribute(Constant.USER_SESSION, user);
             return "frame";
         } else {
-            req.setAttribute("error", "fail to login");
-//            req.getRequestDispatcher("login.jps").forward(req, resp);
+            model.addAttribute("error", "fail to login");
             return "login";
         }
     }

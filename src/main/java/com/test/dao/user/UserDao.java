@@ -22,9 +22,7 @@ public interface UserDao {
     //获取用户列表
     //后续会用插件对分页进行优化，此处暂不优化
     List<User> getUserList(@Param("userName") String userName,
-                           @Param("userRole") Integer userRole,
-                           @Param("currentPageNo") int currentPageNo,
-                           @Param("pageSize") int pageSize);
+                           @Param("userRole") Integer userRole);
 
     //获取用户详细信息
     User getUserView(@Param("id") int id);

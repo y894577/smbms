@@ -16,7 +16,6 @@
         <typeAlias type="com.test.pojo.Role" alias="Role"/>
         <typeAlias type="com.test.pojo.Bill" alias="Bill"/>
     </typeAliases>
-    
 
 
     <environments default="development">

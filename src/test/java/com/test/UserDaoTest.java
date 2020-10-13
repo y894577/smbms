@@ -42,7 +42,7 @@ public class UserDaoTest {
     public void getUserList(){
         String userName = "%"+"a"+"%";
 
-        List<User> list = mapper.getUserList(null, 1, 1, 100);
+        List<User> list = mapper.getUserList(null, 1);
         System.out.println(list.size());
         for (User user : list) {
             System.out.println(user.toString());

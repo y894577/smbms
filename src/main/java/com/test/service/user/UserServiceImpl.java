@@ -1,5 +1,7 @@
 package com.test.service.user;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.test.dao.user.UserDao;
 import com.test.pojo.User;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public void setSqlSession(SqlSessionTemplate sqlSession){
+    public void setSqlSession(SqlSessionTemplate sqlSession) {
         this.sqlSession = sqlSession;
         this.userMapper = sqlSession.getMapper(UserDao.class);
     }
@@ -44,11 +46,13 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
         List<User> userList = null;
-        currentPageNo = (currentPageNo - 1) * pageSize;
         if (!userName.equals(""))
             userName = "%" + userName + "%";
-        userList = userMapper.getUserList(userName, userRole, currentPageNo, pageSize);
-        return userList;
+
+        PageHelper.startPage(currentPageNo, pageSize);
+        userList = userMapper.getUserList(userName, userRole);
+        PageInfo<User> pageInfo = new PageInfo<User>(userList);
+        return pageInfo.getList();
     }
 
     public User getUserView(int id) {
@@ -93,6 +97,6 @@ public class UserServiceImpl implements UserService {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         UserServiceImpl userService = (UserServiceImpl) context.getBean("UserServiceImpl");
 //        UserService userService = new UserServiceImpl();
-        userService.getUserCount("",0);
+        userService.getUserCount("", 0);
     }
 }
