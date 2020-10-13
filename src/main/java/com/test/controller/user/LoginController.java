@@ -1,4 +1,4 @@
-package com.test.controller;
+package com.test.controller.user;
 
 import com.test.pojo.User;
 import com.test.service.user.UserService;

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
 import com.test.pojo.Role;
 import com.test.pojo.User;
-import com.test.service.role.RoleService;
 import com.test.service.role.RoleServiceImpl;
 import com.test.service.user.UserServiceImpl;
 import com.test.util.Constant;

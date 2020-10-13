@@ -63,7 +63,6 @@ public class UserServiceImpl implements UserService {
         if (update > 0) {
             isUpdate = true;
         }
-        sqlSession.commit();
         return isUpdate;
     }
 
@@ -82,7 +81,6 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(int id) {
         boolean isDelete = false;
         int i = userMapper.deleteUser(id);
-        sqlSession.commit();
         System.out.println("delete" + i);
         if (i > 0) {
             isDelete = true;
