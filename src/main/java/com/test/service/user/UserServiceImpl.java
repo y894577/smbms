@@ -45,12 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
-        List<User> userList = null;
         if (!userName.equals(""))
             userName = "%" + userName + "%";
 
         PageHelper.startPage(currentPageNo, pageSize);
-        userList = userMapper.getUserList(userName, userRole);
+        List<User> userList = userMapper.getUserList(userName, userRole);
         PageInfo<User> pageInfo = new PageInfo<User>(userList);
         return pageInfo.getList();
     }

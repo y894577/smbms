@@ -30,10 +30,6 @@ public class UserController {
     @Qualifier("UserServiceImpl")
     private UserService userService;
 
-    @Autowired
-    @Qualifier("RoleServiceImpl")
-    private RoleService roleService;
-
 
     @RequestMapping("/pwdmodify")
     @ResponseBody
@@ -106,7 +102,7 @@ public class UserController {
         String tempQueryUserRole = req.getParameter("queryUserRole");
         String tempCurrentPageNo = req.getParameter("pageIndex");
 
-        int pageSize = 5;
+        int pageSize = Constant.PAGESIZE;
         int queryUserRole = 0;
 
         queryUserName = queryUserName == null ? "" : queryUserName;
@@ -135,12 +131,8 @@ public class UserController {
 
         List<User> userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
 
-        //获取角色列表
-        List<Role> roleList = roleService.getRoleList();
-
 
         model.addAttribute("userList", userList);
-        model.addAttribute("roleList", roleList);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("currentPageNo", currentPageNo);
         model.addAttribute("totalPageCount", totalPageCount);

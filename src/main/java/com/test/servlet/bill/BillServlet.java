@@ -40,8 +40,6 @@ public class BillServlet extends HttpServlet {
             this.getBillView(req, resp, "billview.jsp");
         } else if (method.equals("modify")) {
             this.getBillView(req, resp, "billmodify.jsp");
-        } else if (method.equals("getproviderlist")) {
-            this.getProviderList(req, resp);
         }
     }
 
@@ -55,7 +53,6 @@ public class BillServlet extends HttpServlet {
 
     public void query(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        List<Provider> providerList = providerService.getProviderListByCodeAndName(null, null);
 
         Enumeration enu = req.getParameterNames();
         while (enu.hasMoreElements()) {
@@ -68,7 +65,6 @@ public class BillServlet extends HttpServlet {
         String queryIsPayment = req.getParameter("queryIsPayment");
         List<Bill> billList = billService.getBillList(productName, queryProviderId, queryIsPayment);
         req.setAttribute("billList", billList);
-        req.setAttribute("providerList", providerList);
         req.getRequestDispatcher("billlist.jsp").forward(req, resp);
     }
 
@@ -80,14 +76,6 @@ public class BillServlet extends HttpServlet {
         req.getRequestDispatcher(url).forward(req, resp);
     }
 
-    private void getProviderList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        List<Provider> list = providerService.getProviderListByCodeAndName(null, null);
-        resp.setContentType("json/application");
-        PrintWriter writer = resp.getWriter();
-        writer.write(JSONArray.toJSONString(list));
-        writer.flush();
-        writer.close();
-    }
 
     public void modify(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");

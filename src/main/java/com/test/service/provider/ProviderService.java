@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ProviderService {
-    List<Provider> getProviderListByCodeAndName(String proCode, String proName);
+    List<Provider> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize);
 
     Provider getProviderById(int id);
 
@@ -15,5 +15,7 @@ public interface ProviderService {
     int deleteProvider(int proid);
 
     boolean addProvider(Provider provider);
+
+    int getProviderCount(String queryProName, String queryProCode);
 
 }

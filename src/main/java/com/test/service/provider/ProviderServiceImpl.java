@@ -1,5 +1,7 @@
 package com.test.service.provider;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mysql.cj.util.StringUtils;
 import com.test.dao.bill.BillDao;
 import com.test.dao.provider.ProviderDao;
@@ -17,22 +19,24 @@ public class ProviderServiceImpl implements ProviderService {
     public ProviderServiceImpl() {
     }
 
-    public void setSqlSession(SqlSessionTemplate sqlSession){
+    public void setSqlSession(SqlSessionTemplate sqlSession) {
         this.sqlSession = sqlSession;
         this.providerMapper = sqlSession.getMapper(ProviderDao.class);
         this.billMapper = sqlSession.getMapper(BillDao.class);
     }
 
-    public List<Provider> getProviderListByCodeAndName(String proCode, String proName) {
-        List<Provider> providerList = new ArrayList<Provider>();
+
+    public List<Provider> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) {
         if (!StringUtils.isNullOrEmpty(proCode)) {
             proCode = "%" + proCode + "%";
         }
         if (!StringUtils.isNullOrEmpty(proName)) {
             proName = "%" + proName + "%";
         }
-        providerList = providerMapper.getProviderListByCodeAndName(proCode, proName);
-        return providerList;
+        PageHelper.startPage(currentPageNo, pageSize);
+        List<Provider> providerList = providerMapper.getProviderListByCodeAndName(proCode, proName);
+        PageInfo<Provider> pageInfo = new PageInfo<Provider>(providerList);
+        return pageInfo.getList();
     }
 
     public Provider getProviderById(int id) {
@@ -76,6 +80,10 @@ public class ProviderServiceImpl implements ProviderService {
             isAdd = true;
         }
         return isAdd;
+    }
+
+    public int getProviderCount(String queryProName, String queryProCode) {
+        return providerMapper.getProviderCount(queryProName, queryProCode);
     }
 
 }

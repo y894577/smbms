@@ -16,4 +16,6 @@ public interface ProviderDao {
     int deleteProvider(@Param("id") int id);
 
     int addProvider(Provider provider);
+
+    int getProviderCount(@Param("proName") String queryProName, @Param("proCode") String queryProCode);
 }

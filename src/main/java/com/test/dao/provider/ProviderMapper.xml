@@ -42,4 +42,17 @@
          values (#{proCode} , #{proName} , #{proContact} , #{proPhone} , #{proAddress} , #{proFax} , #{proDesc})
     </insert>
 
+    <select id="getProviderCount" resultType="int">
+        select count(1) as count from smbms_provider
+        <where>
+            <if test="proName != null and proName != ''">
+                proName like #{proName}
+            </if>
+            <if test="proCode != null and proCode != ''">
+                and proCode like #{proCode}
+            </if>
+        </where>
+
+    </select>
+
 </mapper>

@@ -40,10 +40,12 @@ function changeDLGContent(contentStr){
 }
 
 $(function(){
+
 	$(".viewBill").on("click",function(){
 		//将被绑定的元素（a）转换成jquery对象，可以使用jquery方法
 		var obj = $(this);
 		window.location.href=path+"/jsp/bill.do?method=view&billid="+ obj.attr("billid");
+
 	});
 	
 	$(".modifyBill").on("click",function(){
@@ -88,4 +90,36 @@ $(function(){
 			});
 		}
 	});*/
+
+
+	queryProviderId = $("#queryProviderId");
+
+	$.ajax({
+		type:"GET",//请求类型
+		url:path+"/jsp/provider.do",//请求的url
+		data:{method:"getproviderlist"},//请求参数
+		dataType:"json",//ajax接口（请求url）返回的数据类型
+		success:function(data){//data：返回数据（json对象）
+			if(data != null){
+				var pid = $("#pid").val();
+				queryProviderId.html("");
+				var options = "<option value=\"0\">请选择</option>";
+				for(var i = 0; i < data.length; i++){
+					//alert(data[i].id);
+					//alert(data[i].proName);
+					if(pid != null && pid != undefined && data[i].id == pid ){
+						options += "<option selected=\"selected\" value=\""+data[i].id+"\" >"+data[i].proName+"</option>";
+					}else{
+						options += "<option value=\""+data[i].id+"\" >"+data[i].proName+"</option>";
+					}
+				}
+				queryProviderId.html(options);
+			}
+		},
+		error:function(data){//当访问时候，404，500 等非200的错误状态码
+			validateTip(queryProviderId.next(),{"color":"red"},imgNo+" 获取供应商列表error",false);
+		}
+	});
+
+
 });

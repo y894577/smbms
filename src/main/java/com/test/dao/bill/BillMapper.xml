@@ -40,4 +40,13 @@
         where id = #{id}
     </update>
 
+    <select id="getBillCount">
+        select count (1) as count from smbms_bill
+        <where>
+            <if test="productName != null and productName != ''">
+                productName = #{productName}
+            </if>
+        </where>
+    </select>
+
 </mapper>

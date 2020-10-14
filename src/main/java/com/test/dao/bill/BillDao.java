@@ -18,4 +18,8 @@ public interface BillDao {
 
     int addBill(Bill bill);
 
+    int getBillCount(@Param("productName") String productName,
+                     @Param("proId") String proId,
+                     @Param("isPayment") boolean isPayment);
+
 }
