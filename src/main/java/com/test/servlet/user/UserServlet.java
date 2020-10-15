@@ -177,13 +177,13 @@ public class UserServlet extends HttpServlet {
             currentPageNo = totalPageCount;
         }
 
-        List<User> userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
+//        List<User> userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
 
-        //获取角色列表
-        List<Role> roleList = roleService.getRoleList();
+//        //获取角色列表
+//        List<Role> roleList = roleService.getRoleList();
 
-        req.setAttribute("userList", userList);
-        req.setAttribute("roleList", roleList);
+//        req.setAttribute("userList", userList);
+//        req.setAttribute("roleList", roleList);
         req.setAttribute("totalCount", totalCount);
         req.setAttribute("currentPageNo", currentPageNo);
         req.setAttribute("totalPageCount", totalPageCount);

@@ -16,8 +16,8 @@
             <span>供应商：</span>
             <input type="hidden" value="${queryProviderId}" id="pid"/>
             <select name="queryProviderId" id="queryProviderId">
-<%--                <option value="0">--请选择--</option>--%>
-<%--                <option value="{queryProviderId.id}">${queryProviderId.proName}</option>--%>
+                <%--                <option value="0">--请选择--</option>--%>
+                <%--                <option value="{queryProviderId.id}">${queryProviderId.proName}</option>--%>
             </select>
 
             <span>是否付款：</span>

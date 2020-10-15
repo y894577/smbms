@@ -2,8 +2,8 @@ package com.test.service.user;
 
 import com.test.pojo.User;
 
-import java.sql.Connection;
-import java.util.List;
+
+import java.util.Map;
 
 public interface UserService {
 
@@ -13,7 +13,7 @@ public interface UserService {
 
     int getUserCount(String userName, int userRole);
 
-    List<User> getUserList(String userName, int userRole, int currentPageNo, int pageSize);
+    Map<String,Object> getUserList(String userName, int userRole, int currentPageNo, int pageSize);
 
     User getUserView(int id);
 

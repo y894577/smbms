@@ -51,8 +51,8 @@ public class ProviderServlet extends HttpServlet {
     public void query(HttpServletRequest req, HttpServletResponse resp) {
         String queryProCode = req.getParameter("queryProCode");
         String queryProName = req.getParameter("queryProName");
-        List<Provider> providerList = providerService.getProviderListByCodeAndName(queryProCode, queryProName,0,5);
-        req.setAttribute("providerList", providerList);
+//        List<Provider> providerList = providerService.getProviderListByCodeAndName(queryProCode, queryProName,0,5);
+//        req.setAttribute("providerList", providerList);
         try {
             req.getRequestDispatcher("providerlist.jsp").forward(req, resp);
         } catch (ServletException e) {

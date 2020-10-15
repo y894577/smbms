@@ -1,15 +1,23 @@
 package com.test.service.bill;
 
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mysql.cj.util.StringUtils;
 import com.test.dao.bill.BillDao;
 import com.test.pojo.Bill;
+import com.test.util.Constant;
+import com.test.util.PageSupport;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BillServiceImpl implements BillService {
     private SqlSession sqlSession = null;
@@ -23,7 +31,13 @@ public class BillServiceImpl implements BillService {
         this.billMapper = sqlSession.getMapper(BillDao.class);
     }
 
-    public List<Bill> getBillList(String productName, String queryProviderId, String queryIsPayment) {
+    public Map<String, Object> getBillList(String productName, String queryProviderId, String queryIsPayment, String currentPageNo) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("queryProviderId", queryProviderId);
+        result.put("queryProductName", productName);
+        result.put("queryIsPayment", queryIsPayment);
+
         int providerId = 0;
         int isPayment = 0;
         if (!StringUtils.isNullOrEmpty(queryProviderId)) {
@@ -36,8 +50,41 @@ public class BillServiceImpl implements BillService {
         if (!StringUtils.isNullOrEmpty(productName)) {
             productName = "%" + productName + "%";
         }
-        List<Bill> billList = billMapper.getBillList(productName, providerId, isPayment);
-        return billList;
+
+
+        final int finalIsPayment = isPayment;
+        final int finalProviderId = providerId;
+        final String finalProductName = productName;
+        PageInfo<Bill> pageInfo = PageHelper.startPage(0, Integer.MAX_VALUE - 1).doSelectPageInfo(new ISelect() {
+            public void doSelect() {
+                billMapper.getBillList(finalProductName, finalProviderId, finalIsPayment);
+            }
+        });
+
+
+        int pageNo = currentPageNo == null || currentPageNo.equals("") ? 1 : Integer.parseInt(currentPageNo);
+        //获取总条数
+        int totalCount = (int) pageInfo.getTotal();
+        //获取总页数
+        int totalPageCount = (int) Math.ceil(totalCount * 1.0 / Constant.PAGESIZE);
+        pageNo = totalCount == 0 ? 0 : pageNo;
+
+
+        pageInfo = PageHelper.startPage(pageNo, Constant.PAGESIZE).doSelectPageInfo(new ISelect() {
+            public void doSelect() {
+                billMapper.getBillList(finalProductName, finalProviderId, finalIsPayment);
+            }
+        });
+
+
+        result.put("billList", pageInfo.getList());
+        result.put("totalCount", totalCount);
+        result.put("currentPageNo", pageNo);
+        result.put("totalPageCount", totalPageCount);
+
+        return result;
+
+
     }
 
     public Bill getBillById(String billid) {
@@ -63,6 +110,5 @@ public class BillServiceImpl implements BillService {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         BillServiceImpl billService = (BillServiceImpl) context.getBean("BillServiceImpl");
         System.out.println(billService.getBillById("1"));
-        System.out.println(billService.getBillList("", "1", "0"));
     }
 }

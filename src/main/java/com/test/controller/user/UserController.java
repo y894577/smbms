@@ -2,12 +2,9 @@ package com.test.controller.user;
 
 import com.alibaba.fastjson.JSONArray;
 import com.mysql.cj.util.StringUtils;
-import com.test.pojo.Role;
 import com.test.pojo.User;
-import com.test.service.role.RoleService;
 import com.test.service.user.UserService;
 import com.test.util.Constant;
-import com.test.util.PageSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -105,39 +101,16 @@ public class UserController {
         int pageSize = Constant.PAGESIZE;
         int queryUserRole = 0;
 
-        queryUserName = queryUserName == null ? "" : queryUserName;
         int currentPageNo = tempCurrentPageNo == null ? 1 : Integer.parseInt(tempCurrentPageNo);
         if (tempQueryUserRole != null && !tempQueryUserRole.equals("")) {
             queryUserRole = Integer.parseInt(tempQueryUserRole);
         }
 
-        int totalCount = userService.getUserCount(queryUserName, queryUserRole);
+        queryUserName = queryUserName == null ? "" : queryUserName;
 
-        PageSupport pageSupport = new PageSupport();
-        pageSupport.setCurrentPageNo(currentPageNo);
-        pageSupport.setPageSize(pageSize);
-        pageSupport.setTotalCount(totalCount);
+        Map<String, Object> result = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
 
-        //使用工具类获取总页数
-        int totalPageCount = pageSupport.getTotalPageCount();
-
-        if (currentPageNo < 1) {
-            //如果页面小于1，则显示第一页的东西
-            currentPageNo = 1;
-        } else if (currentPageNo > totalPageCount) {
-            //如果页面大于当前页面，则显示最后一页
-            currentPageNo = totalPageCount;
-        }
-
-        List<User> userList = userService.getUserList(queryUserName, queryUserRole, currentPageNo, pageSize);
-
-
-        model.addAttribute("userList", userList);
-        model.addAttribute("totalCount", totalCount);
-        model.addAttribute("currentPageNo", currentPageNo);
-        model.addAttribute("totalPageCount", totalPageCount);
-        model.addAttribute("queryUserName", queryUserName);
-        model.addAttribute("queryUserRole", queryUserRole);
+        model.addAllAttributes(result);
 
         return "userlist";
     }

@@ -1,15 +1,20 @@
 package com.test.service.provider;
 
+import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mysql.cj.util.StringUtils;
 import com.test.dao.bill.BillDao;
 import com.test.dao.provider.ProviderDao;
 import com.test.pojo.Provider;
+import com.test.util.Constant;
+import com.test.util.PageSupport;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProviderServiceImpl implements ProviderService {
     private SqlSessionTemplate sqlSession = null;
@@ -26,17 +31,51 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
 
-    public List<Provider> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) {
+    public Map<String, Object> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("queryProName", proName);
+        result.put("queryProCode", proCode);
+
         if (!StringUtils.isNullOrEmpty(proCode)) {
             proCode = "%" + proCode + "%";
         }
         if (!StringUtils.isNullOrEmpty(proName)) {
             proName = "%" + proName + "%";
         }
-        PageHelper.startPage(currentPageNo, pageSize);
-        List<Provider> providerList = providerMapper.getProviderListByCodeAndName(proCode, proName);
-        PageInfo<Provider> pageInfo = new PageInfo<Provider>(providerList);
-        return pageInfo.getList();
+
+
+        String finalProCode = proCode;
+        String finalProName = proName;
+        PageInfo<Provider> pageInfo = PageHelper.startPage(0, Integer.MAX_VALUE - 1).doSelectPageInfo(new ISelect() {
+            @Override
+            public void doSelect() {
+                providerMapper.getProviderListByCodeAndName(finalProCode, finalProName);
+            }
+        });
+
+        //获取总条数
+        int totalCount = (int) pageInfo.getTotal();
+        //获取总页数
+        int totalPageCount = (int) Math.ceil(totalCount * 1.0 / Constant.PAGESIZE);
+        currentPageNo = totalCount == 0 ? 0 : currentPageNo;
+
+        pageInfo = PageHelper.startPage(currentPageNo, pageSize).doSelectPageInfo(new ISelect() {
+            @Override
+            public void doSelect() {
+                providerMapper.getProviderListByCodeAndName(finalProCode, finalProName);
+            }
+        });
+
+
+
+        result.put("providerList", pageInfo.getList());
+        result.put("totalCount", totalCount);
+        result.put("currentPageNo", currentPageNo);
+        result.put("totalPageCount", totalPageCount);
+
+
+        return result;
     }
 
     public Provider getProviderById(int id) {

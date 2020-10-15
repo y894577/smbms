@@ -1,5 +1,6 @@
 package com.test.service.user;
 
+import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.test.dao.user.UserDao;
@@ -9,7 +10,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserServiceImpl implements UserService {
     private SqlSessionTemplate sqlSession = null;
@@ -44,14 +46,44 @@ public class UserServiceImpl implements UserService {
         return count;
     }
 
-    public List<User> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
+    public Map<String,Object> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("queryUserName", userName);
+        result.put("queryUserRole", userRole);
+
         if (!userName.equals(""))
             userName = "%" + userName + "%";
 
-        PageHelper.startPage(currentPageNo, pageSize);
-        List<User> userList = userMapper.getUserList(userName, userRole);
-        PageInfo<User> pageInfo = new PageInfo<User>(userList);
-        return pageInfo.getList();
+        String finalUserName = userName;
+        PageInfo<User> pageInfo = PageHelper.startPage(0, Integer.MAX_VALUE - 1).doSelectPageInfo(new ISelect() {
+            @Override
+            public void doSelect() {
+                userMapper.getUserList(finalUserName, userRole);
+            }
+        });
+
+
+        //获取总条数
+        int totalCount = (int) pageInfo.getTotal();
+        //获取总页数
+        int totalPageCount = (int) Math.ceil(totalCount * 1.0 / pageSize);
+        currentPageNo = totalCount == 0 ? 0 : currentPageNo;
+
+
+        pageInfo = PageHelper.startPage(currentPageNo, pageSize).doSelectPageInfo(new ISelect() {
+            @Override
+            public void doSelect() {
+                userMapper.getUserList(finalUserName, userRole);
+            }
+        });
+
+        result.put("userList", pageInfo.getList());
+        result.put("totalCount", totalCount);
+        result.put("currentPageNo", currentPageNo);
+        result.put("totalPageCount", totalPageCount);
+
+        return result;
     }
 
     public User getUserView(int id) {

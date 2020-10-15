@@ -3,9 +3,10 @@ package com.test.service.bill;
 import com.test.pojo.Bill;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BillService {
-    List<Bill> getBillList(String productName, String providerId, String isPayment);
+    Map<String,Object> getBillList(String productName, String providerId, String isPayment, String currentPageNo);
 
     Bill getBillById(String billid);
 

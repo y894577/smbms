@@ -24,7 +24,7 @@
     <select id="getUserList" resultType="User">
         select u.* , r.roleName as userRoleName from smbms_user u , smbms_role r where u.userRole = r.id
         <if test="userName != null and userName != ''">
-            and u.userName like ${userName}
+            and u.userName like #{userName}
         </if>
         <if test="userRole != 0">
             and u.userRole = ${userRole}

@@ -4,9 +4,10 @@ import com.test.pojo.Provider;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProviderService {
-    List<Provider> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize);
+    Map<String,Object> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize);
 
     Provider getProviderById(int id);
 

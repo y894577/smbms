@@ -35,32 +35,10 @@ public class ProviderController {
         queryProName = queryProName == null ? "" : queryProName;
         int currentPageNo = pageIndex == null ? 1 : Integer.parseInt(pageIndex);
 
-        int totalCount = providerService.getProviderCount(queryProName, queryProCode);
 
-        PageSupport pageSupport = new PageSupport();
-        pageSupport.setCurrentPageNo(currentPageNo);
-        pageSupport.setPageSize(pageSize);
-        pageSupport.setTotalCount(totalCount);
+        Map<String, Object> result = providerService.getProviderListByCodeAndName(queryProName, queryProCode, currentPageNo, pageSize);
 
-        //使用工具类获取总页数
-        int totalPageCount = pageSupport.getTotalPageCount();
-
-        if (currentPageNo < 1) {
-            //如果页面小于1，则显示第一页的东西
-            currentPageNo = 1;
-        } else if (currentPageNo > totalPageCount) {
-            //如果页面大于当前页面，则显示最后一页
-            currentPageNo = totalPageCount;
-        }
-
-        List<Provider> providerList = providerService.getProviderListByCodeAndName(queryProName, queryProCode, currentPageNo, pageSize);
-
-        model.addAttribute("providerList", providerList);
-        model.addAttribute("totalCount", totalCount);
-        model.addAttribute("currentPageNo", currentPageNo);
-        model.addAttribute("totalPageCount", totalPageCount);
-        model.addAttribute("queryUserName", queryProName);
-        model.addAttribute("queryUserCode", queryProCode);
+        model.addAllAttributes(result);
 
         return "providerlist";
     }
@@ -130,7 +108,8 @@ public class ProviderController {
             produces = {"application/json;charset=utf-8"})
     @ResponseBody
     public String getProviderList(String proCode, String proName) {
-        List<Provider> list = providerService.getProviderListByCodeAndName(proCode, proName, 0, Integer.MAX_VALUE - 1);
+        Map<String, Object> result = providerService.getProviderListByCodeAndName(proCode, proName, 0, Integer.MAX_VALUE - 1);
+        List<Provider> list = (List<Provider>) result.get("providerList");
         return JSONArray.toJSONString(list);
     }
 

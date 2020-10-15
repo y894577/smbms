@@ -63,8 +63,8 @@ public class BillServlet extends HttpServlet {
         String productName = req.getParameter("queryProductName");
         String queryProviderId = req.getParameter("queryProviderId");
         String queryIsPayment = req.getParameter("queryIsPayment");
-        List<Bill> billList = billService.getBillList(productName, queryProviderId, queryIsPayment);
-        req.setAttribute("billList", billList);
+//        List<Bill> billList = billService.getBillList(productName, queryProviderId, queryIsPayment);
+//        req.setAttribute("billList", billList);
         req.getRequestDispatcher("billlist.jsp").forward(req, resp);
     }
 
