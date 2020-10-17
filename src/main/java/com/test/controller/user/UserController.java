@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,17 +29,18 @@ public class UserController {
     private UserService userService;
 
 
-    @RequestMapping("/pwdmodify")
+    @RequestMapping(params = "method=pwdmodify")
     @ResponseBody
     public String modifyPwd(String oldpassword, HttpSession session) {
+        oldpassword = DigestUtils.md5DigestAsHex(oldpassword.getBytes());
         User user = (User) session.getAttribute(Constant.USER_SESSION);
         Map<String, String> resultMap = new HashMap<String, String>();
-        if (user != null) {
+        if (user == null) {
             resultMap.put("result", "sessionerror");
-        } else if (StringUtils.isNullOrEmpty("oldpassword")) {
+        } else if (StringUtils.isNullOrEmpty(oldpassword)) {
             resultMap.put("result", "error");
         } else {
-            String userPassword = ((User) user).getUserPassword();
+            String userPassword = user.getUserPassword();
             if (oldpassword.equals(userPassword)) {
                 resultMap.put("result", "true");
             } else {
@@ -47,6 +49,7 @@ public class UserController {
         }
         return JSONArray.toJSONString(resultMap);
     }
+
 
     @PostMapping(params = "method=modifyexe")
     public String userModify(User user, HttpSession session, RedirectAttributes attr) {
@@ -66,6 +69,8 @@ public class UserController {
     private String addUser(User user, HttpSession session, RedirectAttributes attr) {
         user.setCreationDate(new Date());
         user.setCreatedBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
+        String userPassword = DigestUtils.md5DigestAsHex(user.getUserPassword().getBytes());
+        user.setUserPassword(userPassword);
         int update = userService.addUser(user);
         if (update > 0) {
             attr.addAttribute("method", "query");
@@ -81,13 +86,12 @@ public class UserController {
 
         if (user != null && !StringUtils.isNullOrEmpty(newpassword)) {
             Integer id = ((User) user).getId();
-            boolean isUpdate = userService.updatePwd(id, newpassword);
+            boolean isUpdate = userService.updatePwd(id, DigestUtils.md5DigestAsHex(newpassword.getBytes()));
             if (isUpdate) {
                 model.addAttribute("message", "修改密码成功");
                 session.removeAttribute(Constant.USER_SESSION);
             } else {
                 model.addAttribute("message", "修改密码失败");
-
             }
         } else {
             model.addAttribute("message", "error");
