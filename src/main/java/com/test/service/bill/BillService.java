@@ -11,4 +11,8 @@ public interface BillService {
     Bill getBillById(String billid);
 
     boolean updateBill(Bill bill);
+
+    boolean deleteBill(String billID);
+
+    boolean addBill(Bill bill);
 }

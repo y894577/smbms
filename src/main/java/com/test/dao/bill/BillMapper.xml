@@ -49,4 +49,13 @@
         </where>
     </select>
 
+    <delete id="deleteBill">
+        delete from smbms_bill where id = #{id}
+    </delete>
+
+    <insert id="insertBill">
+        insert into smbms_bill (billCode,productName,productUnit,productCount,totalPrice,providerId,isPayment,createdBy,creationDate)
+        values (#{billCode},#{productName},#{productUnit},#{productCount},#{totalPrice},#{providerId},#{isPayment},#{createdBy},#{creationDate})
+    </insert>
+
 </mapper>

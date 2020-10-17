@@ -32,7 +32,7 @@ public class BillServiceImpl implements BillService {
     }
 
     public Map<String, Object> getBillList(String productName, String queryProviderId, String queryIsPayment, String currentPageNo) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap();
 
         result.put("queryProviderId", queryProviderId);
         result.put("queryProductName", productName);
@@ -92,18 +92,24 @@ public class BillServiceImpl implements BillService {
         if (!StringUtils.isNullOrEmpty(billid)) {
             id = Integer.parseInt(billid);
         }
-        Bill bill = billMapper.getBillById(id);
-        return bill;
+        return billMapper.getBillById(id);
     }
 
     public boolean updateBill(Bill bill) {
-        boolean isUpdate = false;
-        int i = sqlSession.update("com.test.dao.bill.BillDao.updateBill", bill);
-        if (i > 0) {
-            isUpdate = true;
-        }
-        return isUpdate;
+        int i = billMapper.updateBill(bill);
+        return i > 0;
     }
+
+    public boolean deleteBill(String billID) {
+        int i = billMapper.deleteBill(billID);
+        return i > 0;
+    }
+
+    public boolean addBill(Bill bill) {
+        int i = billMapper.insertBill(bill);
+        return i > 0;
+    }
+
 
     @Test
     public void test() {

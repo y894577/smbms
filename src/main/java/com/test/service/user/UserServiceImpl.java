@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
         return count;
     }
 
-    public Map<String,Object> getUserList(String userName, int userRole, int currentPageNo, int pageSize) {
-        Map<String, Object> result = new HashMap<>();
+    public Map<String,Object> getUserList(String userName, final int userRole, int currentPageNo, int pageSize) {
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("queryUserName", userName);
         result.put("queryUserRole", userRole);
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if (!userName.equals(""))
             userName = "%" + userName + "%";
 
-        String finalUserName = userName;
+        final String finalUserName = userName;
         PageInfo<User> pageInfo = PageHelper.startPage(0, Integer.MAX_VALUE - 1).doSelectPageInfo(new ISelect() {
             @Override
             public void doSelect() {

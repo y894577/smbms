@@ -57,16 +57,15 @@ public class ProviderController {
         return getProviderView(proid, method, model);
     }
 
-    @RequestMapping(params = "delprovider")
+    @RequestMapping(params = {"method=delprovider"})
     @ResponseBody
     public String deleteProvider(String proid) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        if (!StringUtils.isNullOrEmpty("proid")) {
-            ProviderService providerService = new ProviderServiceImpl();
+        if (!StringUtils.isNullOrEmpty(proid)) {
             int result = providerService.deleteProvider(Integer.parseInt(proid));
             if (result == 0) {
                 //删除成功
-                resultMap.put("delResult", "true");
+                resultMap.put("delResult", "delResult");
             } else if (result == -1) {
                 //删除失败
                 resultMap.put("delResult", "false");
@@ -75,9 +74,10 @@ public class ProviderController {
                 resultMap.put("delResult", result);
             }
         } else
-            resultMap.put("delResult", false);
+            resultMap.put("delResult", "false");
         return JSONArray.toJSONString(resultMap);
     }
+
 
     @RequestMapping(params = "method=modifyexe")
     public String modifyProvider(Provider provider, HttpSession session) {

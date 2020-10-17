@@ -16,10 +16,11 @@ public interface BillDao {
 
     int updateBill(Bill bill);
 
-    int addBill(Bill bill);
+    int insertBill(Bill bill);
 
     int getBillCount(@Param("productName") String productName,
                      @Param("proId") String proId,
                      @Param("isPayment") boolean isPayment);
 
+    int deleteBill(@Param("id") String id);
 }

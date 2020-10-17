@@ -1,6 +1,7 @@
 package com.test.pojo;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ public class User {
     private String userName; //用户名称
     private String userPassword; //用户密码
     private Integer gender;  //性别
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date birthday;  //出生日期
     private String phone;   //电话
     private String address; //地址

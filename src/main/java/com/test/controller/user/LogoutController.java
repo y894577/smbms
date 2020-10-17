@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("logout.do")
+@RequestMapping("/jsp/logout.do")
 public class LogoutController {
 
-    @PostMapping
+    @RequestMapping
     private String logout(HttpSession session) {
         session.removeAttribute(Constant.USER_SESSION);
         return "redirect:/login.jsp";

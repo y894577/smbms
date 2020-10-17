@@ -3,18 +3,18 @@
 //供应商管理页面上点击删除按钮弹出删除框(providerlist.jsp)
 function deleteProvider(obj){
 	$.ajax({
-		type:"GET",
+		type:"POST",
 		url:path+"/jsp/provider.do",
 		data:{method:"delprovider",proid:obj.attr("proid")},
 		dataType:"json",
 		success:function(data){
-			if(data.delResult == "true"){//删除成功：移除删除行
+			if(data.delResult === "true"){//删除成功：移除删除行
 				cancleBtn();
 				obj.parents("tr").remove();
-			}else if(data.delResult == "false"){//删除失败
+			}else if(data.delResult === "false"){//删除失败
 				//alert("对不起，删除供应商【"+obj.attr("proname")+"】失败");
 				changeDLGContent("对不起，删除供应商【"+obj.attr("proname")+"】失败");
-			}else if(data.delResult == "notexist"){
+			}else if(data.delResult === "notexist"){
 				//alert("对不起，供应商【"+obj.attr("proname")+"】不存在");
 				changeDLGContent("对不起，供应商【"+obj.attr("proname")+"】不存在");
 			}else{

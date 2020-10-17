@@ -7,6 +7,7 @@ import com.test.service.user.UserService;
 import com.test.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class UserController {
 
     @RequestMapping("/pwdmodify")
     @ResponseBody
-    public String modifyPwd(String oldpassword,HttpSession session){
+    public String modifyPwd(String oldpassword, HttpSession session) {
         User user = (User) session.getAttribute(Constant.USER_SESSION);
         Map<String, String> resultMap = new HashMap<String, String>();
         if (user != null) {
@@ -52,28 +53,30 @@ public class UserController {
         user.setModifyBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
         user.setModifyDate(new Date());
         boolean isUpdate = userService.updateUser(user);
-            if (isUpdate) {
-                attr.addAttribute("method", "query");
-                return "redirect:/jsp/user.do";
-            } else {
-                return "usermodify";
-            }
+        if (isUpdate) {
+            attr.addAttribute("method", "query");
+            return "redirect:/jsp/user.do";
+        } else {
+            return "usermodify";
+        }
 
     }
 
     @PostMapping(params = "method=add")
-    private String addUser(User user, RedirectAttributes attr) {
+    private String addUser(User user, HttpSession session, RedirectAttributes attr) {
+        user.setCreationDate(new Date());
+        user.setCreatedBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
         int update = userService.addUser(user);
         if (update > 0) {
             attr.addAttribute("method", "query");
             return "redirect:/jsp/user.do";
         } else {
-            return "";
+            return "useradd";
         }
     }
 
     @RequestMapping(params = "method=savepwd")
-    private String updatePwd(String newpassword,HttpSession session,Model model) {
+    private String updatePwd(String newpassword, HttpSession session, Model model) {
         Object user = session.getAttribute(Constant.USER_SESSION);
 
         if (user != null && !StringUtils.isNullOrEmpty(newpassword)) {
@@ -134,22 +137,25 @@ public class UserController {
         return "usermodify";
     }
 
-    @RequestMapping(params = "method=ucexist")
+    @RequestMapping(params = "method=ucexist",
+            produces = {"application/json;charset=utf-8"})
+    @ResponseBody
     private String userExist(String userCode) {
         int count = userService.getUserCountByUserCode(userCode);
-        Map<String, String> resultMap = new HashMap<String, String>();
-        if (count > 0) {
+        Map<String, String> resultMap = new HashMap();
+        if (count > 0)
             resultMap.put("userCode", "exist");
-        } else {
+        else
             resultMap.put("userCode", "canbeused");
-        }
+
         return JSONArray.toJSONString(resultMap);
     }
 
 
     @RequestMapping(params = "method=deluser",
             produces = {"application/json;charset=utf-8"})
-    private String deleteUser(@RequestParam("uid") String userid){
+    @ResponseBody
+    private String deleteUser(@RequestParam("uid") String userid) {
         Map<String, String> resultMap = new HashMap<String, String>();
         if (!StringUtils.isNullOrEmpty(userid)) {
             boolean isDelete = userService.deleteUser(Integer.parseInt(userid));

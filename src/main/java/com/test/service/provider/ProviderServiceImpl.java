@@ -32,7 +32,7 @@ public class ProviderServiceImpl implements ProviderService {
 
 
     public Map<String, Object> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("queryProName", proName);
         result.put("queryProCode", proCode);
@@ -45,8 +45,8 @@ public class ProviderServiceImpl implements ProviderService {
         }
 
 
-        String finalProCode = proCode;
-        String finalProName = proName;
+        final String finalProCode = proCode;
+        final String finalProName = proName;
         PageInfo<Provider> pageInfo = PageHelper.startPage(0, Integer.MAX_VALUE - 1).doSelectPageInfo(new ISelect() {
             @Override
             public void doSelect() {
@@ -68,7 +68,6 @@ public class ProviderServiceImpl implements ProviderService {
         });
 
 
-
         result.put("providerList", pageInfo.getList());
         result.put("totalCount", totalCount);
         result.put("currentPageNo", currentPageNo);
@@ -84,13 +83,8 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public boolean updateProvider(Provider provider) {
-        boolean isUpdate = false;
         int i = providerMapper.updateProvider(provider);
-        if (i > 0) {
-            isUpdate = true;
-        }
-        sqlSession.commit();
-        return isUpdate;
+        return i > 0;
     }
 
     /**
@@ -113,12 +107,8 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     public boolean addProvider(Provider provider) {
-        boolean isAdd = false;
         int i = providerMapper.addProvider(provider);
-        if (i > 0) {
-            isAdd = true;
-        }
-        return isAdd;
+        return i > 0;
     }
 
     public int getProviderCount(String queryProName, String queryProCode) {

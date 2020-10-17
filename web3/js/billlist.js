@@ -8,13 +8,13 @@ function deleteBill(obj){
 		data:{method:"delbill",billid:obj.attr("billid")},
 		dataType:"json",
 		success:function(data){
-			if(data.delResult == "true"){//删除成功：移除删除行
+			if(data.delResult === "true"){//删除成功：移除删除行
 				cancleBtn();
 				obj.parents("tr").remove();
-			}else if(data.delResult == "false"){//删除失败
+			}else if(data.delResult === "false"){//删除失败
 				//alert("对不起，删除订单【"+obj.attr("billcc")+"】失败");
 				changeDLGContent("对不起，删除订单【"+obj.attr("billcc")+"】失败");
-			}else if(data.delResult == "notexist"){
+			}else if(data.delResult === "notexist"){
 				//alert("对不起，订单【"+obj.attr("billcc")+"】不存在");
 				changeDLGContent("对不起，订单【"+obj.attr("billcc")+"】不存在");
 			}

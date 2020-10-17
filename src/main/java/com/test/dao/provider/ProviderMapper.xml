@@ -34,7 +34,7 @@
     </update>
 
     <delete id="deleteProvider">
-        delete * from smbms_provider where id = #{id}
+        delete from smbms_provider where id = #{id}
     </delete>
 
     <insert id="addProvider">
