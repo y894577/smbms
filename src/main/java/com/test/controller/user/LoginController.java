@@ -29,7 +29,7 @@ public class LoginController {
 
     @PostMapping
     public String login(String userCode, String userPassword, HttpSession session, RedirectAttributes attr) {
-        userPassword = DigestUtils.md5DigestAsHex(userPassword.getBytes());
+//        userPassword = DigestUtils.md5DigestAsHex(userPassword.getBytes());
         User user = userService.login(userCode, userPassword);
         if (user != null) {
             session.setAttribute(Constant.USER_SESSION, user);

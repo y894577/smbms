@@ -1,6 +1,7 @@
 package com.test.dao.bill;
 
 import com.test.pojo.Bill;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

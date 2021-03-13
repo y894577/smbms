@@ -123,11 +123,4 @@ public class UserServiceImpl implements UserService {
         return isDelete;
     }
 
-    @Test
-    public void test() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        UserServiceImpl userService = (UserServiceImpl) context.getBean("UserServiceImpl");
-//        UserService userService = new UserServiceImpl();
-        userService.getUserCount("", 0);
-    }
 }

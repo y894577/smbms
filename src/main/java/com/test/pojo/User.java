@@ -3,10 +3,11 @@ package com.test.pojo;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class User {
+public class User implements Serializable {
     private Integer id; //id
     private String userCode; //用户编码
     private String userName; //用户名称

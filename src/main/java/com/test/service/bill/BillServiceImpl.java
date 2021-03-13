@@ -109,12 +109,4 @@ public class BillServiceImpl implements BillService {
         int i = billMapper.insertBill(bill);
         return i > 0;
     }
-
-
-    @Test
-    public void test() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        BillServiceImpl billService = (BillServiceImpl) context.getBean("BillServiceImpl");
-        System.out.println(billService.getBillById("1"));
-    }
 }
