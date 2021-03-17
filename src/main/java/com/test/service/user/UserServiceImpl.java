@@ -4,11 +4,15 @@ import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.test.dao.user.UserDao;
+import com.test.dao.user.UserRedisDao;
+import com.test.dao.user.UserRedisDaoImpl;
 import com.test.pojo.User;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +21,16 @@ public class UserServiceImpl implements UserService {
     private SqlSessionTemplate sqlSession = null;
     private UserDao userMapper = null;
 
+//    @Autowired
+//    private UserRedisDao userRedisDao = null;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     public UserServiceImpl() {
 
     }
+
 
     public void setSqlSession(SqlSessionTemplate sqlSession) {
         this.sqlSession = sqlSession;
@@ -29,10 +40,13 @@ public class UserServiceImpl implements UserService {
     public User login(String userCode, String userPassword) {
         User user = null;
         user = userMapper.getLoginUser(userCode, userPassword);
+        redisTemplate.opsForValue().set("loginUser:" + user.getUserCode(), user.getUserCode());
         return user;
     }
 
     public boolean updatePwd(int id, String password) {
+
+
         boolean isUpdate = false;
         if (userMapper.updatePwd(id, password) > 0) {
             isUpdate = true;
@@ -46,7 +60,7 @@ public class UserServiceImpl implements UserService {
         return count;
     }
 
-    public Map<String,Object> getUserList(String userName, final int userRole, int currentPageNo, int pageSize) {
+    public Map<String, Object> getUserList(String userName, final int userRole, int currentPageNo, int pageSize) {
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("queryUserName", userName);

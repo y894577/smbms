@@ -9,6 +9,7 @@
 
     <context:property-placeholder location="classpath:db.properties"/>
 
+
     <!--数据源-->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="${jdbc.driver}"/>
@@ -47,5 +48,8 @@
         <!-- 给出需要扫描Dao接口包 -->
         <property name="basePackage" value="com.test.dao"/>
     </bean>
+
+<!--    <bean id="userRedisDao" class="com.test.dao.user.UserRedisDaoImpl">-->
+<!--    </bean>-->
 
 </beans>

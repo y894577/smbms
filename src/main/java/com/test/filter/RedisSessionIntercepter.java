@@ -1,5 +1,6 @@
 package com.test.filter;
 
+import com.test.pojo.User;
 import com.test.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +18,7 @@ import java.util.List;
 public class RedisSessionIntercepter extends HandlerInterceptorAdapter {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private List<String> excludeUrls;
 
@@ -28,22 +29,27 @@ public class RedisSessionIntercepter extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
-
         boolean doFilter = true;
+
         for (String s : excludeUrls) {
             if (uri.contains(s)) {
                 doFilter = false;
             }
             break;
         }
+
         if (doFilter) {
             HttpSession session = request.getSession();
-            if (session.getAttribute(Constant.USER_SESSION) != null) {
-                String loginSessionId = (String) redisTemplate.opsForValue().get("loginUser:" + session.getAttribute(Constant.USER_SESSION));
-                if (loginSessionId != null && loginSessionId.equals(session.getId()))
+            User user = (User) session.getAttribute(Constant.USER_SESSION);
+            if (user != null) {
+                String loginSessionId = (String) redisTemplate.opsForValue().get("loginUser:" + user.getUserCode());
+                System.out.println("loginUser:" + user.getUserCode());
+                if (loginSessionId != null && loginSessionId.equals(user.getUserCode()))
                     return true;
             }
+            response.sendRedirect(request.getContextPath() + "/error.jsp");
+            return false;
         }
-        return false;
+        return true;
     }
 }

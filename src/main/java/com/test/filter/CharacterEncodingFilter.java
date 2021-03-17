@@ -12,20 +12,6 @@ public class CharacterEncodingFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        HttpServletRequest req=(HttpServletRequest) request;
-//        HttpServletResponse resp=(HttpServletResponse) response;
-//
-//        request.setCharacterEncoding("UTF-8");
-//        response.setCharacterEncoding("UTF-8");
-//
-//        String URI = req.getRequestURI();
-//        if (URI.contains(".css")) {
-//            chain.doFilter(request, response);
-//            return ;
-//        }
-//        response.setContentType("text/html;charset=UTF-8");
-//
-//        chain.doFilter(request, response);
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");

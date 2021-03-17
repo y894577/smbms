@@ -8,6 +8,9 @@
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
 
+
+
+
     <bean id="UserServiceImpl" class="com.test.service.user.UserServiceImpl" scope="prototype">
         <property name="sqlSession" ref="sqlSession"/>
     </bean>

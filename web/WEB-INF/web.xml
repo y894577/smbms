@@ -25,15 +25,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <filter>
-        <filter-name>SysFilter</filter-name>
-        <filter-class>com.test.filter.SysFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>SysFilter</filter-name>
-        <url-pattern>/jsp/*</url-pattern>
-    </filter-mapping>
 
     
     <!--SpringMVC实现-->
