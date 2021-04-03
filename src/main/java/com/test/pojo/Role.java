@@ -2,10 +2,11 @@ package com.test.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class Role {
+public class Role implements Serializable {
     private Integer id;   //id
     private String roleCode; //角色编码
     private String roleName; //角色名称
@@ -68,6 +69,19 @@ public class Role {
 
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", roleCode='" + roleCode + '\'' +
+                ", roleName='" + roleName + '\'' +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
+                ", modifyBy=" + modifyBy +
+                ", modifyDate=" + modifyDate +
+                '}';
     }
 }
 

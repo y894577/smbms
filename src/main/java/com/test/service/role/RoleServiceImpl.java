@@ -1,17 +1,28 @@
 package com.test.service.role;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.test.dao.role.RoleDao;
+import com.test.dao.role.RoleRedisDao;
+import com.test.dao.user.UserRedisDao;
 import com.test.pojo.Role;
-import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RoleServiceImpl implements RoleService {
     private SqlSessionTemplate sqlSession = null;
     private RoleDao roleMapper = null;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RoleRedisDao roleRedisDao = null;
 
     public RoleServiceImpl() {
     }
@@ -22,18 +33,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
 
-    public List<Role> getRoleList() {
-        List<Role> roleList = null;
-        roleList = roleMapper.getRoleList();
-        return roleList;
-    }
-
-
-    @Test
-    public void test() {
-
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        RoleServiceImpl roleService = (RoleServiceImpl) context.getBean("RoleServiceImpl");
-        System.out.println(roleService.getRoleList().size());
+    public Set<Role> getRoleList() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        if (redisTemplate.opsForSet().size("Role") == 0) {
+            System.out.println("database");
+            List<Role> roleList = null;
+            roleList = roleMapper.getRoleList();
+            Set<Role> roleSet = new HashSet<>(roleList);
+            roleRedisDao.add(new ArrayList<>(roleSet));
+            return roleSet;
+        } else {
+            System.out.println("redis");
+            Set<Role> roleSet = roleRedisDao.zget();
+            return roleSet;
+        }
     }
 }

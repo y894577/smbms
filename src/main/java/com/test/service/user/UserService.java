@@ -3,11 +3,12 @@ package com.test.service.user;
 import com.test.pojo.User;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public interface UserService {
 
-    User login(String userCode, String password);
+    User login(String userCode, String password) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException;
 
     boolean updatePwd(int id, String password);
 

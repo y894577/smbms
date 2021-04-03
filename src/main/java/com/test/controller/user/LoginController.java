@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 
 @Controller
 @RequestMapping("/login.do")
@@ -28,7 +29,7 @@ public class LoginController {
     private UserService userService;
 
     @PostMapping
-    public String login(String userCode, String userPassword, HttpSession session, RedirectAttributes attr) {
+    public String login(String userCode, String userPassword, HttpSession session, RedirectAttributes attr) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 //        userPassword = DigestUtils.md5DigestAsHex(userPassword.getBytes());
         User user = userService.login(userCode, userPassword);
         if (user != null) {

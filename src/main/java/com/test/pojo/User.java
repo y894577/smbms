@@ -1,9 +1,14 @@
 package com.test.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.test.util.*;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,15 +18,30 @@ public class User implements Serializable {
     private String userName; //用户名称
     private String userPassword; //用户密码
     private Integer gender;  //性别
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private Date birthday;  //出生日期
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime birthday;  //出生日期
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+
     private String phone;   //电话
     private String address; //地址
     private Integer userRole;    //用户角色
     private Integer createdBy;   //创建者
-    private Date creationDate; //创建时间
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime creationDate; //创建时间
+
     private Integer modifyBy;     //更新者
-    private Date modifyDate;   //更新时间
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDateTime modifyDate;   //更新时间
+
 
     private Integer age;//年龄
     private String userRoleName;    //用户角色名称
@@ -81,11 +101,11 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthday() {
+    public LocalDateTime getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDateTime birthday) {
         this.birthday = birthday;
     }
 
@@ -121,11 +141,11 @@ public class User implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -137,11 +157,11 @@ public class User implements Serializable {
         this.modifyBy = modifyBy;
     }
 
-    public Date getModifyDate() {
+    public LocalDateTime getModifyDate() {
         return modifyDate;
     }
 
-    public void setModifyDate(Date modifyDate) {
+    public void setModifyDate(LocalDateTime modifyDate) {
         this.modifyDate = modifyDate;
     }
 

@@ -7,13 +7,16 @@ import com.test.dao.user.UserDao;
 import com.test.dao.user.UserRedisDao;
 import com.test.dao.user.UserRedisDaoImpl;
 import com.test.pojo.User;
+import com.test.util.RedisUtil;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.convert.RedisData;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +24,14 @@ public class UserServiceImpl implements UserService {
     private SqlSessionTemplate sqlSession = null;
     private UserDao userMapper = null;
 
-//    @Autowired
-//    private UserRedisDao userRedisDao = null;
+    @Autowired
+    private UserRedisDao userRedisDao = null;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     public UserServiceImpl() {
 
@@ -37,16 +43,14 @@ public class UserServiceImpl implements UserService {
         this.userMapper = sqlSession.getMapper(UserDao.class);
     }
 
-    public User login(String userCode, String userPassword) {
+    public User login(String userCode, String userPassword) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         User user = null;
         user = userMapper.getLoginUser(userCode, userPassword);
-        redisTemplate.opsForValue().set("loginUser:" + user.getUserCode(), user.getUserCode());
+        userRedisDao.add(user);
         return user;
     }
 
     public boolean updatePwd(int id, String password) {
-
-
         boolean isUpdate = false;
         if (userMapper.updatePwd(id, password) > 0) {
             isUpdate = true;
@@ -61,6 +65,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public Map<String, Object> getUserList(String userName, final int userRole, int currentPageNo, int pageSize) {
+
+        userRedisDao.get("name");
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("queryUserName", userName);

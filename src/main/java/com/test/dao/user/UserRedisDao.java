@@ -10,13 +10,14 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface UserRedisDao {
 
-    boolean add(User keyId);
+    boolean add(User keyId) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException;
 
-    boolean add(List<User> list);
+    boolean add(List<User> list) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException;
 
     void delete(String key);
 

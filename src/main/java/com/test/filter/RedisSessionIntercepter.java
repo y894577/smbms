@@ -42,9 +42,8 @@ public class RedisSessionIntercepter extends HandlerInterceptorAdapter {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute(Constant.USER_SESSION);
             if (user != null) {
-                String loginSessionId = (String) redisTemplate.opsForValue().get("loginUser:" + user.getUserCode());
-                System.out.println("loginUser:" + user.getUserCode());
-                if (loginSessionId != null && loginSessionId.equals(user.getUserCode()))
+                Integer loginSessionId = (Integer) redisTemplate.opsForHash().get("loginUser:" + user.getId(), "id");
+                if (loginSessionId != null && loginSessionId.equals(user.getId()))
                     return true;
             }
             response.sendRedirect(request.getContextPath() + "/error.jsp");

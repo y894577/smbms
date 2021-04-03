@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class UserController {
     @PostMapping(params = "method=modifyexe")
     public String userModify(User user, HttpSession session, RedirectAttributes attr) {
         user.setModifyBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
-        user.setModifyDate(new Date());
+        user.setModifyDate(LocalDateTime.now());
         boolean isUpdate = userService.updateUser(user);
         if (isUpdate) {
             attr.addAttribute("method", "query");
@@ -67,7 +68,7 @@ public class UserController {
 
     @PostMapping(params = "method=add")
     private String addUser(User user, HttpSession session, RedirectAttributes attr) {
-        user.setCreationDate(new Date());
+        user.setCreationDate(LocalDateTime.now());
         user.setCreatedBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
         String userPassword = DigestUtils.md5DigestAsHex(user.getUserPassword().getBytes());
         user.setUserPassword(userPassword);

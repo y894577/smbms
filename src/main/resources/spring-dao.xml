@@ -49,7 +49,8 @@
         <property name="basePackage" value="com.test.dao"/>
     </bean>
 
-<!--    <bean id="userRedisDao" class="com.test.dao.user.UserRedisDaoImpl">-->
-<!--    </bean>-->
+    <bean id="userRedisDao" class="com.test.dao.user.UserRedisDaoImpl"></bean>
+
+    <bean id="roleRedisDao" class="com.test.dao.role.RoleRedisDaoImpl"></bean>
 
 </beans>

@@ -19,7 +19,7 @@ public class LogoutController {
     @RequestMapping
     private String logout(HttpSession session) {
         User user =(User) session.getAttribute(Constant.USER_SESSION);
-        redisTemplate.delete("loginUser:" + user.getUserCode());
+        redisTemplate.opsForHash().delete("loginUser:" + user.getUserCode());
         session.removeAttribute(Constant.USER_SESSION);
         return "redirect:/login.jsp";
     }
