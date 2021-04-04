@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ProviderController {
     private ProviderService providerService;
 
     @RequestMapping(params = "method=query")
-    private String queryProvider(String queryProCode, String queryProName, String pageIndex, Model model) {
+    private String queryProvider(String queryProCode, String queryProName, String pageIndex, Model model) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         int pageSize = Constant.PAGESIZE;
 
         queryProName = queryProName == null ? "" : queryProName;
@@ -107,7 +108,7 @@ public class ProviderController {
     @RequestMapping(params = "method=getproviderlist",
             produces = {"application/json;charset=utf-8"})
     @ResponseBody
-    public String getProviderList(String proCode, String proName) {
+    public String getProviderList(String proCode, String proName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> result = providerService.getProviderListByCodeAndName(proCode, proName, 0, Integer.MAX_VALUE - 1);
         List<Provider> list = (List<Provider>) result.get("providerList");
         return JSONArray.toJSONString(list);

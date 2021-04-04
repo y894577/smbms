@@ -53,4 +53,6 @@
 
     <bean id="roleRedisDao" class="com.test.dao.role.RoleRedisDaoImpl"></bean>
 
+    <bean id="providerRedisDao" class="com.test.dao.provider.ProviderRedisDaoImpl"></bean>
+
 </beans>

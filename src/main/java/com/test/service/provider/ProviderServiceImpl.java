@@ -6,11 +6,15 @@ import com.github.pagehelper.PageInfo;
 import com.mysql.cj.util.StringUtils;
 import com.test.dao.bill.BillDao;
 import com.test.dao.provider.ProviderDao;
+import com.test.dao.provider.ProviderRedisDao;
 import com.test.pojo.Provider;
 import com.test.util.Constant;
 import com.test.util.PageSupport;
+import org.apache.ibatis.jdbc.Null;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +24,9 @@ public class ProviderServiceImpl implements ProviderService {
     private SqlSessionTemplate sqlSession = null;
     private ProviderDao providerMapper = null;
     private BillDao billMapper = null;
+
+    @Autowired
+    private ProviderRedisDao providerRedisDao;
 
     public ProviderServiceImpl() {
     }
@@ -31,7 +38,7 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
 
-    public Map<String, Object> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) {
+    public Map<String, Object> getProviderListByCodeAndName(String proCode, String proName, int currentPageNo, int pageSize) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("queryProName", proName);
@@ -74,11 +81,23 @@ public class ProviderServiceImpl implements ProviderService {
         result.put("totalPageCount", totalPageCount);
 
 
+        // 添加redis
+        String key = "pro:";
+
+        providerRedisDao.sadd("proName", pageInfo.getList());
+
+        providerRedisDao.hmset(pageInfo.getList());
+
+
         return result;
     }
 
     public Provider getProviderById(int id) {
-        Provider provider = providerMapper.getProviderById(id);
+        Provider provider;
+        if (providerRedisDao.hexists(String.valueOf(id))) {
+            provider = providerRedisDao.hget(String.valueOf(id));
+        } else
+            provider = providerMapper.getProviderById(id);
         return provider;
     }
 
