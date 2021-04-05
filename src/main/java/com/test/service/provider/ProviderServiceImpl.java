@@ -101,9 +101,10 @@ public class ProviderServiceImpl implements ProviderService {
         return provider;
     }
 
-    public boolean updateProvider(Provider provider) {
+    public boolean updateProvider(Provider provider) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         int i = providerMapper.updateProvider(provider);
-        return i > 0;
+        boolean isUpdate = providerRedisDao.hset(provider);
+        return i > 0 && isUpdate;
     }
 
     /**
@@ -115,6 +116,8 @@ public class ProviderServiceImpl implements ProviderService {
         if (billCount == 0) {
             int i = providerMapper.deleteProvider(proid);
             if (i > 0) {
+                providerRedisDao.hdel(String.valueOf(proid));
+                providerRedisDao.srem(String.valueOf(proid));
                 return 0;
             } else {
                 return -1;
@@ -125,9 +128,10 @@ public class ProviderServiceImpl implements ProviderService {
 
     }
 
-    public boolean addProvider(Provider provider) {
+    public boolean addProvider(Provider provider) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         int i = providerMapper.addProvider(provider);
-        return i > 0;
+        boolean isAdd = providerRedisDao.hset(provider);
+        return i > 0 && isAdd;
     }
 
     public int getProviderCount(String queryProName, String queryProCode) {

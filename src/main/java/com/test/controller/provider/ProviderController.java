@@ -81,7 +81,7 @@ public class ProviderController {
 
 
     @RequestMapping(params = "method=modifyexe")
-    public String modifyProvider(Provider provider, HttpSession session) {
+    public String modifyProvider(Provider provider, HttpSession session) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         provider.setModifyBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
         provider.setModifyDate(new Date());
         boolean isUpdate = providerService.updateProvider(provider);
@@ -94,7 +94,7 @@ public class ProviderController {
 
 
     @RequestMapping(params = "method=add")
-    private String addProvider(Provider provider, HttpSession session) {
+    private String addProvider(Provider provider, HttpSession session) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         provider.setCreatedBy(((User) session.getAttribute(Constant.USER_SESSION)).getId());
         provider.setCreationDate(new Date());
 

@@ -12,11 +12,11 @@ public interface ProviderService {
 
     Provider getProviderById(int id);
 
-    boolean updateProvider(Provider provider);
+    boolean updateProvider(Provider provider) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException;
 
     int deleteProvider(int proid);
 
-    boolean addProvider(Provider provider);
+    boolean addProvider(Provider provider) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException;
 
     int getProviderCount(String queryProName, String queryProCode);
 

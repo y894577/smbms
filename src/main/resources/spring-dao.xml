@@ -55,4 +55,6 @@
 
     <bean id="providerRedisDao" class="com.test.dao.provider.ProviderRedisDaoImpl"></bean>
 
+    <bean id="billRedisDao" class="com.test.dao.bill.BillRedisDaoImpl"></bean>
+
 </beans>

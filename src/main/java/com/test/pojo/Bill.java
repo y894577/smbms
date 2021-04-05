@@ -1,12 +1,14 @@
 package com.test.pojo;
 
 import lombok.Data;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class Bill {
+public class Bill implements Serializable {
     private Integer id;   //id
     private String billCode; //账单编码
     private String productName; //商品名称
@@ -134,5 +136,25 @@ public class Bill {
 
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "id=" + id +
+                ", billCode='" + billCode + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productDesc='" + productDesc + '\'' +
+                ", productUnit='" + productUnit + '\'' +
+                ", productCount=" + productCount +
+                ", totalPrice=" + totalPrice +
+                ", isPayment=" + isPayment +
+                ", providerId=" + providerId +
+                ", createdBy=" + createdBy +
+                ", creationDate=" + creationDate +
+                ", modifyBy=" + modifyBy +
+                ", modifyDate=" + modifyDate +
+                ", providerName='" + providerName + '\'' +
+                '}';
     }
 }

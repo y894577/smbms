@@ -17,11 +17,17 @@ public interface ProviderRedisDao {
 
     boolean sadd(String key, List<Provider> providers) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
+    List<Provider> sscan(String prefix);
+
+    boolean srem(String id);
+
     boolean hset(Provider provider) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
 
     boolean hmset(List<Provider> providers) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException;
 
-    boolean hexists (String id);
+    boolean hexists(String id);
 
     Provider hget(String id);
+
+    boolean hdel(String id);
 }

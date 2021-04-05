@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Controller
@@ -39,7 +40,7 @@ public class BillController {
 
 
     @RequestMapping(params = "method=query")
-    private String queryBill(HttpServletRequest req, Model model) {
+    private String queryBill(HttpServletRequest req, Model model) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         String productName = req.getParameter("queryProductName");
         String queryProviderId = req.getParameter("queryProviderId");
         String queryIsPayment = req.getParameter("queryIsPayment");

@@ -6,7 +6,11 @@ import com.test.pojo.Provider;
 import com.test.pojo.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
+import org.springframework.data.redis.core.ZSetOperations;
+import redis.clients.jedis.ScanParams;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +44,7 @@ public class ProviderRedisDaoImpl implements ProviderRedisDao {
 
     @Override
     public boolean hset(Provider provider) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String userHash = "pro:" + provider.getId();
+        String proHash = "pro:" + provider.getId();
         Map<String, Object> map = new HashMap<String, Object>();
         Class<? extends Provider> proClass = provider.getClass();
         for (Field field : proClass.getDeclaredFields()) {
@@ -57,8 +61,8 @@ public class ProviderRedisDaoImpl implements ProviderRedisDao {
             else
                 map.put(field.getName(), o);
         }
-        redisTemplate.opsForHash().putAll(userHash, map);
-        return false;
+        redisTemplate.opsForHash().putAll(proHash, map);
+        return true;
     }
 
     @Override
@@ -78,9 +82,27 @@ public class ProviderRedisDaoImpl implements ProviderRedisDao {
     public Provider hget(String id) {
         Map<Object, Object> entries = redisTemplate.opsForHash().entries("pro:" + id);
         String s = JSON.toJSONString(entries);
-        System.out.println(s);
         Provider provider = JSON.parseObject(s, Provider.class);
         return provider;
+    }
+
+    @Override
+    public boolean hdel(String id) {
+        redisTemplate.opsForHash().delete("pro:" + id);
+        return false;
+    }
+
+    @Override
+    public List<Provider> sscan(String prefix) {
+        String pattern = "pro:*" + prefix + "*";
+        Set<String> keys = redisTemplate.keys(pattern);
+        return null;
+    }
+
+    @Override
+    public boolean srem(String id) {
+        redisTemplate.opsForSet().remove("pro:" + id);
+        return true;
     }
 
 
@@ -88,18 +110,6 @@ public class ProviderRedisDaoImpl implements ProviderRedisDao {
     public boolean sadd(String key, Provider provider) {
         redisTemplate.opsForSet().add(key, String.valueOf(provider.getId()));
         return true;
-    }
-
-    public boolean zrem(Provider provider) {
-        return true;
-    }
-
-    @Override
-    public boolean zadd(Set<Provider> providerSet) {
-        for (Provider provider : providerSet) {
-            zadd(provider);
-        }
-        return false;
     }
 
     @Override
@@ -116,5 +126,18 @@ public class ProviderRedisDaoImpl implements ProviderRedisDao {
         }
         return false;
     }
+
+    public boolean zrem(Provider provider) {
+        return true;
+    }
+
+    @Override
+    public boolean zadd(Set<Provider> providerSet) {
+        for (Provider provider : providerSet) {
+            zadd(provider);
+        }
+        return false;
+    }
+
 
 }
